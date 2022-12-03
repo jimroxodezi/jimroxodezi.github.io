@@ -1,5 +1,3 @@
-Here you can say lots of fun things about your site.
+Hey There! I'm Jimrox Odezi.
 
-Maybe say a some things about yourself.
-
-Or maybe what you plan to blog about.
+Welcome to my blog where I talk mostly about what I learn in Software Engineering
