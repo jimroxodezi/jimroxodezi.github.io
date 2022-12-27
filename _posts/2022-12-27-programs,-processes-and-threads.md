@@ -6,7 +6,7 @@ I was not born then--but computer history has it that--computers were programmed
 
 ## Stored Program Computer
 
-With rapid development and innovations came the idea of a stored program computer which expresses a computer program as a sequence of coded instructions. Memory holds both data and instrucions. The CPU fetches, interprets and executes successive instructions of the program. 
+With rapid development and innovations came the idea of a stored program computer which expresses a computer program as a sequence of coded instructions. Memory holds both data and instrucions. The CPU fetches, interprets and executes successive instructions of the program. The two major models of this idea are the von Neuman Architecture and Havard Architecture.
 
 ## A world of Abstractions.
 
