@@ -11,7 +11,9 @@ It is a stored-program computer. It expresses a computer program as a sequence o
 ## A world of Abstractions.
 
 One of the most ubitiqous concepts in computer science and software engineering is the idea of abstraction. It is in fact, a very commonly used term in the world of software. But what is abstraction?
-Abstraction can mean many things to different people, but a quite astounding explanation (or definition if you like) of abstraction can be found in this blog post.
+Abstraction can mean many things to different people, but a quite astounding explanation (or definition if you like) of abstraction can be found in this blog post. Abstraction was defined as:
+
+> "...a controlled form of forgetting the details to focus on something more fundamental, allowing one to make statements that are shorter to state, yet broader in meaning"
 
 
 
