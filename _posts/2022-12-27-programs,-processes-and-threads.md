@@ -1,6 +1,6 @@
 In this post, i give a quite an extensive discourse on what I've learnt on Process and Thread.
 
-## In he beginning...
+## In the beginning...
 
 I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modifying hardware like the circuitry or adjusting some physical controls.
 
@@ -11,7 +11,7 @@ With rapid development and innovations came the idea of a stored program compute
 ## A world of Abstractions.
 
 One of the most ubitiqous concepts in computer science and software engineering is the idea of abstraction. It is in fact, a very commonly used term in the world of software. But what is abstraction?
-Abstraction can mean many things to different people, but a quite astounding explanation (or definition if you like) of abstraction can be found in this [blog post](https://the.scapegoat.dev/why-i-am-learning-category-theory-1/). Abstraction was defined as:
+Abstraction can mean many things to different people, but a quite astounding explanation (or definition if you like) of abstraction can be found in this [blog post](https://the.scapegoat.dev/why-i-am-learning-category-theory-1/). Abstraction is defined as:
 
 > "...a controlled form of forgetting the details to focus on something more fundamental, allowing one to make statements that are shorter to state, yet broader in meaning"
 
