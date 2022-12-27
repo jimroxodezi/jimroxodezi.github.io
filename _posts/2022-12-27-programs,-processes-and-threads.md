@@ -2,11 +2,11 @@ In this post, i give a quite an extensive discourse on what I've learnt on Proce
 
 ## In the beginnig:
 
-I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task.
+I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modify hardware like the circuitry or adjusting some physical controls.
 
 ## Stored Program Computer
 
-It is a stored-program computer. It expresses a computer program as a sequence of coded instructions. Memory holds both data and instrucions. The CPU fetches, interprets and executes successive instructions of the program.
+With rapid development and innovations came the idea of a stored program computer which expresses a computer program as a sequence of coded instructions. Memory holds both data and instrucions. The CPU fetches, interprets and executes successive instructions of the program. 
 
 ## A world of Abstractions.
 
