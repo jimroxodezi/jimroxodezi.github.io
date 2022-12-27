@@ -2,7 +2,7 @@ In this post, i give a quite an extensive discourse on what I've learnt on Proce
 
 ## In the beginnig:
 
-I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modify hardware like the circuitry or adjusting some physical controls.
+I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modifying hardware like the circuitry or adjusting some physical controls.
 
 ## Stored Program Computer
 
