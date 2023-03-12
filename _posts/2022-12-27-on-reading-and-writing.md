@@ -11,3 +11,10 @@ If you'll take time to read and learn to internalize the grammar and semantics o
 This means to be a successful reader, you must learn that art of reading. 
 
 ## Vanity Metrics
+We most times pride ourselves in the number of books read but I think it's far more important to "own" the content of a book to have merely read through 
+a book.
+
+## On writing
+A powerful idea clearly and simply written is better that a merely simple idea written with "powerful" and high sounding words. There's the tendency
+for us to sound poetic, use unnecessary and redundant words, thereby introducing ambiguities into our ideas. Inn simplicity lies the power of
+communication.
