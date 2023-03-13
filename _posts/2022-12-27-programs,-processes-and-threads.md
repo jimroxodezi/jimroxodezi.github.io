@@ -26,6 +26,9 @@ The relation between a process and a program is like the relationship between a 
 ## Threads
 A thread is a sequential execution stream within a process. A process can either be single-threaded or multithreaded. By single threaded, we mean the program has just one sequential path of execution. Multithread has to do with multiple paths of execution of the program, that is, many parts working together to fulfil a goal. Threads in a process share the same address space, hence, there is a need for synchronization. As long as we have a single active thread within a process, this process is still alive. A process with no thread cannot exist (since a thread is the unit of program execution).
 
+## Etymological Nuances.
+The word process have been used to mean a different thing in other contexts, the foremost I know of is in Hoare's Communication Sequential Processes (CSP) paper. Process as used by him referred to unit of computation. Many programming languages whose memory models have been based on CSP have come to use different terminologies to refer to these processes. Such terminologies include goroutine (in Golang), coroutines (in Kotlin), actors (erlang), etc...
+
 ## Programming
 
 Most non-trivial computer programming languages provide APIs and mechanisms for us to work with processes and threads at a high level of abstraction. Python for instance have modules for multiprocessing and threading. Example code: 
