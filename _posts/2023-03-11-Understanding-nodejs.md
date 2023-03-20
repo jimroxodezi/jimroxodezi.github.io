@@ -17,7 +17,12 @@ Nodejs uses the event driven approach of programming (event-driven paradigm) suc
 - the API should be familiar to client-side JS and Unix programming interface. 
 
 At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that 
-` server.on()` is not different from `server.addLister()` just like the way you add event listeners to `HTMLElemnts` like:
+` server.on()` 
+ is not different from 
+`server.addLister()` 
+just like the way you add event listeners to 
+`HTMLElemnts`
+ like:
 ```js
 document.getElementById('btn').addEventListener(eventName, callback)
 ```
