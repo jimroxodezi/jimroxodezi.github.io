@@ -4,17 +4,26 @@ I started giving myself to understand the language (JavaScript) and the runtime 
 understand the basic building blocks and fundamental ideas that stack up to become the very intricate and often intitmidating-to-beginners systems.
 It's a fact that if we give it time (and thorough learning), we can grok anything no matter how intricate it may seem.
 
+I love backend engineering and my first exposure to nodejs was through the express.js framework. I think this is the way it is for most beginner programmers. But premature exposure to frameworks like this can make us lose sight of the fundamental idea or underlying details and principles of a programming language or runtime.
+
 ## Programming Paradigms
 
-A programming paradigm is an approach to programming a computer based on a mathematical theory or a coherent set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem.
-
+A programming paradigm is an approach or method of programming a computer based on a mathecoherent set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem.
 ### ???
 
 Nodejs uses the event driven approach of programming (event-driven paradigm) such that:
 
 - No function should perform direct I/O, to receive data from disk, network or another process, there must be a callback.
-- the API should be familiar to client-side JS and Unix programming interface.
+- the API should be familiar to client-side JS and Unix programming interface. 
 
+At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that 
+` server.on()` is not different from `server.addLister()` just like the way you add event listeners to `HTMLElemnts` like:
+```js
+document.getElementById('btn').addEventListener(eventName, callback)
+```
+The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
+
+## Events and EventEmitters.
 
 # Node Event Loop
 It as a C program and is part of libuv. It is a design pattern that ochestrates or co-ordinates the execution of synchronous and asynchronous code in Node.js in six different queues. All JavaScript, V8, and the event loop run in one thread, called the main thread.  A common misconception is to think that
