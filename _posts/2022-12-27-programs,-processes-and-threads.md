@@ -1,8 +1,8 @@
-In this post, i give a quite an extensive discourse on what I've learnt on Process and Thread.
+In this post, I go into quite a bit of detail about what I've learned about Processes and Threads.
 
 ## In the beginning...
 
-I was not born then--but computer history has it that--computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modifying hardware like the circuitry or adjusting some physical controls.
+Early computers were programmed without the program stored. That is, to run a different program meant reprogramming the computer for just that specific task. This even had to do with modifying hardware like the circuitry or adjusting some physical controls.
 
 ### Stored Program Computer
 
@@ -15,7 +15,9 @@ Abstraction can mean many things to different people, but a quite astounding exp
 
 > "...a controlled form of forgetting the details to focus on something more fundamental, allowing one to make statements that are shorter to state, yet broader in meaning"
 
+I consider that a very excellent description of what abstraction is. This is very true of abstraction at every level of the software stack. We use web APIs without understanding the details or caring much about what's going on behind the scenes, we talk about computers fectching data from memory in a straighforward manner without considering much fine-grained details like memory heirarchy with it's attendant concepts (like caching, catch hits and misses, cache lines), memory paging and allocations, paged I/O operations on disks, etc,etc... We just simply talked about these "high-level" operations without paying much attention to the details. We often talk about leaky abstractions if, in an attempt to look at these high-level stuffs, we begin to delve too much into the details.
 
+I've had to talk about abstraction because the idea of processes and threads are very good abstractions we have to deal with as computer programmers.
 
 ## Programs and Processes
 
