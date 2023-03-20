@@ -16,17 +16,13 @@ Nodejs uses the event driven approach of programming (event-driven paradigm) suc
 - No function should perform direct I/O, to receive data from disk, network or another process, there must be a callback.
 - the API should be familiar to client-side JS and Unix programming interface. 
 
-At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that 
-`server.on()` 
- is not different from 
-`server.addLister()` 
-just like the way you add event listeners to 
-`HTMLElemnts`
- like:
+At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that
+```server.on()``` is not different from ```server.addLister()``` just like the way you add event listeners to 
+`HTMLElemnts` like:
 ```js
 document.getElementById('btn').addEventListener(eventName, callback)
 ```
-The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
+As a matter of fact, ```server.on()``` is just an alias for ```server.addListener()``` addcording to the Node.js docs. The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
 
 ## Events and EventEmitters.
 
