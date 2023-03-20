@@ -24,7 +24,7 @@ document.getElementById('btn').addEventListener(eventName, callback)
 ```
 As a matter of fact, ```server.on()``` is just an alias for ```server.addListener()``` addcording to the Node.js docs. The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
 
-![](first.excalidraw.png)
+![Node](../_assests/first.excalidraw.png)
 
 ## Events and EventEmitters.
 
