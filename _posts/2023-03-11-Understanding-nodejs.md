@@ -56,6 +56,11 @@ Running the above program wil print "I'm leaving" before exiting. Should we remo
 
 ## Events and EventEmitters.
 
+According to the Nodejs docs:
+>All objects that emit events are instances of the EventEmitter class. These objects expose an eventEmitter.on() function that allows one or more functions to be attached to named events emitted by the object.
+
+The evenEmitter.on() method is as alias for `eventEmitter.addListener()` method. This can be found [here]() in the Node.js source. The `eventEmitter.addListener()` looks more intuitive for someone that comes from frontend programmer where they attach events to an HTMLElement using the `elem.addEventListener()` method that the browser API exposes.
+
 # Node Event Loop
 It as a C program and is part of libuv. It is a design pattern that ochestrates or co-ordinates the execution of synchronous and asynchronous code in Node.js in six different queues. All JavaScript, V8, and the event loop run in one thread, called the main thread.  A common misconception is to think that
 the event loop runs in a separate thred to the user code or the event loop handles every asynchronous operation in the thread pool.
