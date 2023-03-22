@@ -143,7 +143,7 @@ User written sychronous JavaScript code takes priority over async code that the 
 If there are more callbacks to be processed, the event loop is kept alive for one more run and the same steps are repeated. On the otherhand, if all callbacks are executed and there is no more code to process, the event loop exits.
 
 
->` Blocking I/O has to do with data fetch outside RAM from disk, network or other processes and takes so much CPU cycles, unlike non-blocking I/O that have to do with data fetch from CPU caches or at most RAM and takes fewer CPU cycles.
+1. > Blocking I/O has to do with data fetch outside RAM from disk, network or other processes and takes so much CPU cycles, unlike non-blocking I/O that have to do with data fetch from CPU caches or at most RAM and takes fewer CPU cycles.
 
 ## References.
 1. [Node.js Official Docs]()
