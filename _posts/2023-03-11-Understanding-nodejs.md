@@ -8,7 +8,7 @@ I love backend engineering and my first exposure to nodejs was through the expre
 
 ## Programming Paradigms
 
-A programming paradigm is an approach or method of programming a computer based on a mathecoherent set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem.
+A programming paradigm is an approach or method of programming a computer based on a set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem.
 ### ???
 
 The fact that Node.js (and JavaScript) is an event driven runtime is an often overlook idea by beginner programmers. Nodejs uses the event driven approach of programming (event-driven paradigm) such that:
@@ -25,10 +25,16 @@ document.getElementById('btn').addEventListener(eventName, callback)
 As a matter of fact, ```server.on()``` is just an alias for ```server.addListener()``` addcording to the Node.js docs. The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
 
 ## Node Architecture
+# <img src="{{site.url}}/images/node-arch.png" style="display: block; margin: auto;"/>
+
 
 Nodejs is not single-threaded per se--it is the JavaScript engine (V8) responsible for executing Javascript code that is single-threaded. Node use multiple threads under the hood, it just hides most of it such that the end user rarely even knows what is happening. The author of Nodejs, in his original presentation of Node.js said that programming with threads is a leaky abstraction, and that I/O needs to be done differently.
 
-Event driven programming fits very well into the kind of problems that Node.js tries to solve, that is, building scalable and efficient network applications and web servers. The Javascript programming language provides constructs that simplifies event driven programming like closures, anonymous functions, callbacks, async/await, Promises, etc. JavaScript was chosen in implementing Node.js because it was already geared towards event-driven programming. 
+According to the Node.js docs:
+>When Node.js performs an I/O operation, like reading from the network, accessing a database or the filesystem, instead of blocking the thread and wasting CPU cycles waiting, Node.js will resume the operations when the response comes back.
+>This allows Node.js to handle thousands of concurrent connections with a single server without introducing the burden of managing thread concurrency, which could be a significant source of bugs.
+
+Event driven programming fits very well into the kind of problems that Node.js tries to solve, that is, building scalable and efficient network applications and web servers and programs that have to do with lot of blocking I/O<sup>1</sup>.The Javascript programming language provides constructs that simplifies event driven programming like closures, anonymous functions, callbacks, async/await, Promises, etc. JavaScript was chosen in implementing Node.js because it was already geared towards event-driven programming. 
 
 I also think evented programming is a very good way of programming good software that have to deal with I/O--the realworld is event driven after all! For instance, when we want to kill a running Node process, we press `ctrl + c` and an interrupt signal is sent which kills the running process. This is as a result of a callback function built into the `process.on()` method. We can even override this method such that we can no longer kill the process by pressing `ctrl + c` or it prints a message before exiting:
 
@@ -51,19 +57,22 @@ process.on("SIGINT", () => {
 ```
 Running the above program wil print "I'm leaving" before exiting. Should we remove the `process.exit(0)` code, the program will no long stop on `ctrl+c`. We will have to kill it with the task manager of the operating system.
 
-<img src="{{site.url}}/images/node-arch.png" style="display: block; margin: auto;"/>
-
 
 ## Events and EventEmitters.
 
-According to the Nodejs docs:
->All objects that emit events are instances of the EventEmitter class. These objects expose an eventEmitter.on() function that allows one or more functions to be attached to named events emitted by the object.
+
+According to the Nodejs [docs](https://nodejs.org/api/events.html#events):
+>Much of the Node.js core API is built around an idiomatic asynchronous event-driven architecture in which certain kinds of objects (called "emitters") emit named events that cause Function objects ("listeners") to be called.
+
+>For instance: a net.Server object emits an event each time a peer connects to it; a fs.ReadStream emits an event when the file is opened; a stream emits an event whenever data is available to be read.
+
+>All objects that emit events are instances of the EventEmitter class. These objects expose an eventEmitter.on() function that allows one or more functions to be attached to named events emitted by the object. Typically, event names are camel-cased strings but any valid JavaScript property key can be used.
 
 The evenEmitter.on() method is as alias for `eventEmitter.addListener()` method. This can be found [here]() in the Node.js source. The `eventEmitter.addListener()` looks more intuitive for someone that comes from frontend programmer where they attach events to an HTMLElement using the `elem.addEventListener()` method that the browser API exposes.
 
 # Node Event Loop
 It as a C program and is part of libuv. It is a design pattern that ochestrates or co-ordinates the execution of synchronous and asynchronous code in Node.js in six different queues. All JavaScript, V8, and the event loop run in one thread, called the main thread.  A common misconception is to think that
-the event loop runs in a separate thred to the user code or the event loop handles every asynchronous operation in the thread pool.
+the event loop runs in a separate thread to the user code or the event loop handles every asynchronous operation in the thread pool.
 
 Whenever an async task completes in libuv, at what point does Nodejs decide to run the associated callback function on the call stack? Callback functions are executed only when the callstack is empty. The normal flow of execution will not be interrupted to run a callback function.
 
@@ -134,6 +143,7 @@ User written sychronous JavaScript code takes priority over async code that the 
 If there are more callbacks to be processed, the event loop is kept alive for one more run and the same steps are repeated. On the otherhand, if all callbacks are executed and there is no more code to process, the event loop exits.
 
 
-
+>` Blocking I/O has to do with data fetch outside RAM from disk, network or other processes and takes so much CPU cycles, unlike non-blocking I/O that have to do with data fetch from CPU caches or at most RAM and takes fewer CPU cycles.
 
 ## References.
+1. [Node.js Official Docs]()
