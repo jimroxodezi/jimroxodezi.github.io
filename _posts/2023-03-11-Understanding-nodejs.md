@@ -1,28 +1,23 @@
-I really didn't like Nodejs or JavaScript as a programming language due to its seemingly difficult to understand programming constructs--and this
-made me shy away from web programming especially front-end programming that makes heavy use of the JavaScript programming language. But with time,
-I started giving myself to understand the language (JavaScript) and the runtime (Nodejs). This is true for understanding anything, innit?--getting to 
-understand the basic building blocks and fundamental ideas that stack up to become the very intricate and often intitmidating-to-beginners systems.
-It's a fact that if we give it time (and thorough learning), we can grok anything no matter how intricate it may seem.
+## Understanding Node.js
+I really didn’t like Node.js or JavaScript as a programming language due to its seemingly difficult to understand programming constructs—and this made me shy away from web programming, especially front-end programming that makes heavy use of the JavaScript programming language. But with time, I started to understand the language (JavaScript) and the runtime (Nodejs). This is true for understanding anything, innit?–getting to understand the basic building blocks and fundamental ideas that stack up to become the very intricate and often intimidating-to-beginners systems. It’s a fact that if we give it time (and thorough learning), we can grok anything no matter how intricate it may seem.
 
-I love backend engineering and my first exposure to nodejs was through the express.js framework. I think this is the way it is for most beginner programmers. But premature exposure to frameworks like this can make us lose sight of the fundamental idea or underlying details and principles of a programming language or runtime.
+I love backend engineering and my first exposure to nodejs was through the express.js framework. This is probably the way it is for most beginner programmers and the evidence is clear from many YouTube tutorials and blog posts about building web servers in Nodejs. But premature exposure to frameworks like this can make us lose sight of the fundamental idea or underlying details and principles of a programming language or runtime.
 
 ## Programming Paradigms
+In computer science speak, a programming paradigm is an approach or method of programming a computer based on a set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem. The fact that Node.js (and JavaScript) is an event driven runtime is an often overlooked idea by beginner programmers. Nodejs uses the event driven approach of programming such that:
 
-A programming paradigm is an approach or method of programming a computer based on a set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem.
-### ???
+No function performs direct I/O, to receive data from disk, network or another process, there must be a callback. The API should be familiar to client-side JavaScript and the Unix programming interface. —Ryan Dahl, on his initial presentation of the Node.js project.
 
-The fact that Node.js (and JavaScript) is an event driven runtime is an often overlook idea by beginner programmers. Nodejs uses the event driven approach of programming (event-driven paradigm) such that:
+At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that server.on() is not different from server.addLister() just like the way you add event listeners to HTMLElemnts like:
 
-- No function should perform direct I/O, to receive data from disk, network or another process, there must be a callback.
-- the API should be familiar to client-side JS and Unix programming interface. 
-
-At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that
-```server.on()``` is not different from ```server.addLister()``` just like the way you add event listeners to 
-`HTMLElemnts` like:
-```js
 document.getElementById('btn').addEventListener(eventName, callback)
-```
-As a matter of fact, ```server.on()``` is just an alias for ```server.addListener()``` addcording to the Node.js docs. The key idea in nodejs is, every object that will implement this functionality inherits from the `EventEmitter` class.
+
+As a matter of fact, server.on() is just an alias for server.addListener(). The key idea in nodejs is, every object that will implement this functionality inherits from the EventEmitter class.
+
+Node.js Architecture.
+Node.js is not single-threaded per se—it is the JavaScript engine responsible for executing Javascript code that is single-threaded. Saying Node.js is single-threaded is quite an oversimplification which can be misleading when using it. Node.js uses multiple threads under the hood, it just hides most of it such that the end user rarely even knows what is happening. Node.js uses more than one thread (more on that later), but only one thread—called the main thread—is exposed to the user. The author of Node.js, in his original presentation of Node.js said that programming with threads is a leaky abstraction, and that I/O needs to be done differently.
+
+
 
 ## Node Architecture
 # <img src="{{site.url}}/images/node-arch.png" style="display: block; margin: auto;"/>
