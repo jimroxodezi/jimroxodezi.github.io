@@ -10,20 +10,17 @@ No function performs direct I/O, to receive data from disk, network or another p
 
 At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that server.on() is not different from server.addLister() just like the way you add event listeners to HTMLElemnts like:
 
+```js
 document.getElementById('btn').addEventListener(eventName, callback)
+```
 
-As a matter of fact, server.on() is just an alias for server.addListener(). The key idea in nodejs is, every object that will implement this functionality inherits from the EventEmitter class.
-
-Node.js Architecture.
-Node.js is not single-threaded per se—it is the JavaScript engine responsible for executing Javascript code that is single-threaded. Saying Node.js is single-threaded is quite an oversimplification which can be misleading when using it. Node.js uses multiple threads under the hood, it just hides most of it such that the end user rarely even knows what is happening. Node.js uses more than one thread (more on that later), but only one thread—called the main thread—is exposed to the user. The author of Node.js, in his original presentation of Node.js said that programming with threads is a leaky abstraction, and that I/O needs to be done differently.
-
+As a matter of fact, `server.on()` is just an alias for `server.addListener()`. The key idea in nodejs is, every object that will implement this functionality inherits from the EventEmitter class.
 
 
 ## Node Architecture
 # <img src="{{site.url}}/images/node-arch.png" style="display: block; margin: auto;"/>
 
-
-Nodejs is not single-threaded per se--it is the JavaScript engine (V8) responsible for executing Javascript code that is single-threaded. Node use multiple threads under the hood, it just hides most of it such that the end user rarely even knows what is happening. The author of Nodejs, in his original presentation of Node.js said that programming with threads is a leaky abstraction, and that I/O needs to be done differently.
+Node.js is not single-threaded per se—it is the JavaScript engine responsible for executing Javascript code that is single-threaded. Saying Node.js is single-threaded is quite an oversimplification which can be misleading when using it. Node.js uses multiple threads under the hood, it just hides most of it such that the end user rarely even knows what is happening. Node.js uses more than one thread (more on that later), but only one thread—called the main thread—is exposed to the user. The author of Node.js, in his original presentation of Node.js said that programming with threads is a leaky abstraction, and that I/O needs to be done differently.
 
 According to the Node.js docs:
 >When Node.js performs an I/O operation, like reading from the network, accessing a database or the filesystem, instead of blocking the thread and wasting CPU cycles waiting, Node.js will resume the operations when the response comes back.
