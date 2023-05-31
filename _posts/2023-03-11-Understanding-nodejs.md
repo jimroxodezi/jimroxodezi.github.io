@@ -6,7 +6,9 @@ I love backend engineering and my first exposure to nodejs was through the expre
 ## Programming Paradigms
 In computer science speak, a programming paradigm is an approach or method of programming a computer based on a set of principles. Each paradigm supports a set of concepts that makes it the best for a certain kind of problem. The fact that Node.js (and JavaScript) is an event driven runtime is an often overlooked idea by beginner programmers. Nodejs uses the event driven approach of programming such that:
 
-No function performs direct I/O, to receive data from disk, network or another process, there must be a callback. The API should be familiar to client-side JavaScript and the Unix programming interface. —Ryan Dahl, on his initial presentation of the Node.js project.
+>No function performs direct I/O, to receive data from disk, network or another process, there must be a callback. The API should be familiar to client-side JavaScript and the Unix programming interface.
+
+—Ryan Dahl, on his initial presentation of the Node.js project.
 
 At a very high level, nodejs event-driven approach to programming is not quite different from browser JavaScript event driven approach. For instance, I later understood that server.on() is not different from server.addLister() just like the way you add event listeners to HTMLElemnts like:
 
