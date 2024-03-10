@@ -23,7 +23,11 @@ I've had to talk about abstraction because the idea of processes and threads are
 ## Programs and Processes
 A program is an executable file that contains a list of all the instruction needed to perform a task in a computer. When the task (the executable file or program) is running, that is, being executed by the processor, it is referred to as a process.
 
-A program lists the instructions; a process executes the instructions.The ides of a process is a fundamental abstraction provided by the operating system (OS) in modern computing. A computer program is a passive collection of instructions typically stored in a file on disk. A process is the execution of those instructions after being loaded from disk to memory. Several process can be associated with the same program. A thread is the smallest sequence of instructions that can be independently managed by a scheduler<sup>1</sup>. Multiple threads can exist within one process and share it's resources<sup>2</sup> such as memory, code, sockets, etc. Different processes do not share these resources, hence, process don't directly communicate with each other--and we speak of interprocess communication [(IPC)]().
+A program lists the instructions; a process executes the instructions.The ides of a process is a fundamental abstraction provided by the operating system (OS) in modern computing. A computer program is a passive collection of instructions typically stored in a file on disk. A process is the execution of those instructions after being loaded from disk to memory. Several process can be associated with the same program. 
+
+A process is an operating system abstraction that group together a number of resources need to run a program. Whilst a program is a static file that lists instrcutions that a computer should run, the idea of a process is only obtainable at "runtime". A process is a program at runtime. At the operating system level, one of the things (or resources) that makes up a process is the thread(s).
+
+A thread is the smallest sequence of instructions that can be independently managed by a scheduler<sup>1</sup>. Multiple threads can exist within one process and share it's resources<sup>2</sup> such as memory, code, sockets, etc. Different processes do not share these resources, hence, process don't directly communicate with each other--and we speak of interprocess communication [(IPC)]().
 
 The relation between a process and a program is like the relationship between a class and an object or the relationship between an interface and an implementation.
 
