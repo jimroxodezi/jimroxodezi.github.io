@@ -1,14 +1,5 @@
 ## On Questions.
 
----
-title: On Questions.
-author: Jimrox Odezi
-published: 2023-05-31
-updated: 2026-07-23
----
-
-# On Questions.
-
 May 31, 2023 (updated Jul 23, 2026) • Jimrox Odezi
 
 Share on:
