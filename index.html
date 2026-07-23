@@ -9,8 +9,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
 </head>
 <body>
+
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light mode">☀</button>
 
 <header class="hero">
   <canvas id="trace" aria-hidden="true"></canvas>
@@ -214,7 +217,8 @@
       }
       if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     }
-    ctx.strokeStyle = 'rgba(95,191,179,0.55)';
+    ctx.strokeStyle = document.documentElement.dataset.theme === 'light'
+      ? 'rgba(37,119,108,0.5)' : 'rgba(95,191,179,0.55)';
     ctx.lineWidth = 1.4;
     ctx.stroke();
 

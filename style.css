@@ -11,6 +11,16 @@
     --sans:'IBM Plex Sans', sans-serif;
     --display:'Space Grotesk', sans-serif;
   }
+  :root[data-theme="light"]{
+    --bg-deep:#f4f1ea;
+    --bg-panel:#ece8df;
+    --bg-panel-2:#e5e0d5;
+    --line:#d8d2c4;
+    --amber:#b0761c;
+    --cyan:#25776c;
+    --text:#22303c;
+    --text-muted:#5f6e7a;
+  }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
@@ -20,7 +30,18 @@
     font-family:var(--sans);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    transition:background 0.3s ease, color 0.3s ease;
   }
+
+  .theme-toggle{
+    position:fixed; top:18px; right:20px; z-index:50;
+    width:38px; height:38px; border-radius:50%;
+    background:var(--bg-panel); border:1px solid var(--line); color:var(--text);
+    font-size:16px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color 0.2s ease, color 0.2s ease, background 0.3s ease;
+  }
+  .theme-toggle:hover{border-color:var(--amber); color:var(--amber);}
   ::selection{background:var(--amber); color:#0e1620;}
   a{color:var(--cyan); text-decoration:none;}
   a:hover{color:var(--amber);}
