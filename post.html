@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="style.css">
 <script src="theme.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 
@@ -103,6 +104,7 @@
       metaEl.textContent = formatDate(data.date);
 
       bodyEl.innerHTML = marked.parse(content);
+      bodyEl.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
     }catch(err){
       titleEl.textContent = 'Post not found';
       bodyEl.innerHTML = '<p>That post doesn\'t exist yet.</p>';

@@ -214,3 +214,19 @@
   color:var(--text-muted); font-style:italic;
 }
 .loading{font-family:var(--mono); font-size:13px; color:var(--text-muted);}
+
+/* ---------- SYNTAX HIGHLIGHTING (highlight.js) ----------
+   Token colors ride on the site variables, so they follow the
+   light/dark toggle automatically. */
+.hljs{color:var(--text); background:transparent;}
+.hljs-comment, .hljs-quote{color:var(--text-muted); font-style:italic;}
+.hljs-keyword, .hljs-selector-tag, .hljs-tag, .hljs-name,
+.hljs-type, .hljs-built_in, .hljs-doctag{color:var(--cyan);}
+.hljs-string, .hljs-number, .hljs-literal, .hljs-regexp,
+.hljs-template-variable, .hljs-addition{color:var(--amber);}
+.hljs-title, .hljs-section, .hljs-attr, .hljs-attribute,
+.hljs-variable, .hljs-symbol, .hljs-bullet{color:var(--text);}
+.hljs-title.function_, .hljs-title.class_{color:var(--cyan);}
+.hljs-meta, .hljs-deletion{color:var(--text-muted);}
+.hljs-emphasis{font-style:italic;}
+.hljs-strong{font-weight:600;}
