@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing — Jimrox</title>
+<meta name="description" content="Notes on distributed systems, infrastructure, and whatever else is on the bench.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="sitemap">
+  <div class="wrap">
+    <a href="index.html">Jimrox</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="blog.html">Writing</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <a class="back-link" href="index.html">&larr; Back home</a>
+    <h1>Writing</h1>
+    <p class="muted">Notes on distributed systems, infrastructure, and whatever's on the bench.</p>
+  </div>
+
+  <div id="post-list" class="post-list">
+    <p class="loading">Loading posts…</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-note">Built and deployed on GitHub Pages.</p>
+  </div>
+</footer>
+
+<script>
+  async function loadPosts(){
+    const listEl = document.getElementById('post-list');
+    try{
+      const res = await fetch('posts/posts.json');
+      const posts = await res.json();
+      posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+      if(posts.length === 0){
+        listEl.innerHTML = '<p class="muted">No posts yet.</p>';
+        return;
+      }
+
+      listEl.innerHTML = posts.map(p => `
+        <div class="post-row">
+          <time datetime="${p.date}">${formatDate(p.date)}</time>
+          <div>
+            <a class="title" href="post.html?slug=${encodeURIComponent(p.slug)}">${p.title}</a>
+            <p>${p.excerpt}</p>
+          </div>
+        </div>
+      `).join('');
+    }catch(err){
+      listEl.innerHTML = '<p class="muted">Couldn\'t load posts right now.</p>';
+      console.error(err);
+    }
+  }
+  function formatDate(d){
+    const date = new Date(d + 'T00:00:00');
+    return date.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  }
+  loadPosts();
+</script>
+
+</body>
+</html>

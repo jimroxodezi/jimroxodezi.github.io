@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Post — Jimrox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+</head>
+<body>
+
+<nav class="sitemap">
+  <div class="wrap">
+    <a href="index.html">Jimrox</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="blog.html">Writing</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <a class="back-link" href="blog.html">&larr; All posts</a>
+    <h1 id="post-title">Loading…</h1>
+    <p class="post-meta" id="post-meta"></p>
+  </div>
+  <div id="post-body" class="post-body">
+    <p class="loading">Loading post…</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-note">Built and deployed on GitHub Pages.</p>
+  </div>
+</footer>
+
+<script>
+  function parseFrontmatter(raw){
+    const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+    if(!match) return { data:{}, content: raw };
+    const data = {};
+    match[1].split('\n').forEach(line=>{
+      const i = line.indexOf(':');
+      if(i === -1) return;
+      const key = line.slice(0,i).trim();
+      const val = line.slice(i+1).trim().replace(/^["']|["']$/g,'');
+      data[key] = val;
+    });
+    return { data, content: match[2] };
+  }
+
+  function formatDate(d){
+    if(!d) return '';
+    const date = new Date(d + 'T00:00:00');
+    return date.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+  }
+
+  async function loadPost(){
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+    const bodyEl = document.getElementById('post-body');
+    const titleEl = document.getElementById('post-title');
+    const metaEl = document.getElementById('post-meta');
+
+    if(!slug){
+      titleEl.textContent = 'Post not found';
+      bodyEl.innerHTML = '<p>No post specified.</p>';
+      return;
+    }
+
+    try{
+      const res = await fetch(`posts/${slug}.md`);
+      if(!res.ok) throw new Error('not found');
+      const raw = await res.text();
+      const { data, content } = parseFrontmatter(raw);
+
+      titleEl.textContent = data.title || slug;
+      document.getElementById('page-title').textContent = `${data.title || slug} — Jimrox`;
+      metaEl.textContent = formatDate(data.date);
+
+      bodyEl.innerHTML = marked.parse(content);
+    }catch(err){
+      titleEl.textContent = 'Post not found';
+      bodyEl.innerHTML = '<p>That post doesn\'t exist yet.</p>';
+      console.error(err);
+    }
+  }
+  loadPost();
+</script>
+
+</body>
+</html>

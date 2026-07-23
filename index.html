@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jimrox — Distributed Systems &amp; Infrastructure</title>
+<meta name="description" content="Jimrox — building distributed systems, fintech infrastructure, and developer tools. MSc research in SDR-based LTE anomaly detection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <canvas id="trace" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">signal acquired</p>
+    <h1>Jimrox</h1>
+    <p class="tagline">Building distributed systems, fintech infrastructure, and the developer tools that sit underneath both.</p>
+    <p class="location">Benin City, Edo State, Nigeria</p>
+  </div>
+</header>
+
+<nav class="sitemap">
+  <div class="wrap">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="blog.html">Writing</a>
+    <a href="#links">Links</a>
+  </div>
+</nav>
+
+<section id="about" class="reveal">
+  <div class="wrap">
+    <p class="label">About</p>
+    <p>I work across distributed systems engineering, fintech infrastructure, and AI developer tooling. Most of what holds my attention is the same shape of problem wearing different clothes: what happens when a node fails, when a clock drifts, when a signal looks almost right but isn't.</p>
+    <p class="muted">Alongside engineering work with Minas Tech and Minas AI, I'm building Pigra Labs, a database infrastructure and developer platform aimed at African markets, and finishing an MSc thesis on software-defined radio and deep learning-based anomaly detection in LTE signals.</p>
+  </div>
+</section>
+
+<section id="experience" class="reveal">
+  <div class="wrap">
+    <p class="label">Experience</p>
+    <div class="timeline">
+
+      <div class="role">
+        <time>2026 — Present</time>
+        <div>
+          <p class="org">Pigra Labs <span>· Founder</span></p>
+          <ul>
+            <li>Designing a database infrastructure and developer platform for African markets, evolved from an early Postgres control plane for fintechs into a broader Supabase-style platform</li>
+            <li>Scoping integrations with African payment rails (Paystack, Flutterwave, MTN MoMo) and SMS gateways</li>
+            <li>Positioning around data sovereignty as a core product requirement, not an afterthought</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <time>Ongoing</time>
+        <div>
+          <p class="org">Minas Tech &amp; Minas AI <span>· Engineering</span></p>
+          <ul>
+            <li>Built a customer support and security monitoring system spanning Gmail ingestion, phishing detection, and Bybit API integration, surfaced through a Retool dashboard</li>
+            <li>Shipped Guardian, a crypto exchange account security monitor in Python (CCXT, FastAPI, WebSockets, SQLite) with encrypted key storage and a polling-based diff engine</li>
+            <li>Produced technical and brand deliverables for Minas AI, including a programmatically generated slide deck on AI agents</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <time>In progress</time>
+        <div>
+          <p class="org">MSc Thesis <span>· SDR &amp; Deep Learning</span></p>
+          <ul>
+            <li>Researching software-defined radio and deep learning-based anomaly detection for LTE signals</li>
+            <li>Built the capture environment on an RTL-SDR Blog V4 and a PyTorch convolutional autoencoder pipeline for anomaly detection</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="reveal">
+  <div class="wrap">
+    <p class="label">Projects</p>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-meta"><span>dbfailsim</span><span>active</span></div>
+        <h3>Distributed failure simulator</h3>
+        <p>A five-node cluster with a Raft-lite coordinator and pluggable failure scenarios — replica lag, split brain, network partitions, partial failures — for testing distributed systems theory against something that actually breaks.</p>
+        <div class="stack">Go · Raft · consensus</div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta"><span>Pigra Labs</span><span>building</span></div>
+        <h3>Database infra for African markets</h3>
+        <p>A developer platform built around a managed Postgres control plane, with local payment rail and SMS gateway integrations and data sovereignty as a first-class concern.</p>
+        <div class="stack">Postgres · developer platform</div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta"><span>Guardian</span><span>shipped</span></div>
+        <h3>Exchange security monitor</h3>
+        <p>Tracks crypto exchange accounts for suspicious activity with encrypted API key storage and a polling-based diff engine, drawing on prior withdrawal-tracking and phishing monitoring work.</p>
+        <div class="stack">Python · CCXT · FastAPI · WebSockets</div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta"><span>SDR / LTE</span><span>thesis</span></div>
+        <h3>LTE anomaly detection</h3>
+        <p>A convolutional autoencoder pipeline over signal captured with an RTL-SDR Blog V4, learning what a clean LTE signal looks like well enough to flag what isn't.</p>
+        <div class="stack">PyTorch · RTL-SDR</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="reveal">
+  <div class="wrap">
+    <p class="label">Skills</p>
+    <div class="skills">
+      <div class="skill-group">
+        <p class="label" style="color:var(--cyan)">Systems &amp; Backend</p>
+        <p class="items">Go, Python, TypeScript, distributed consensus (Raft), gRPC / REST</p>
+      </div>
+      <div class="skill-group">
+        <p class="label" style="color:var(--cyan)">Data &amp; Infra</p>
+        <p class="items">PostgreSQL, Drizzle ORM, AWS EC2, Nginx + Certbot, Neon</p>
+        <p class="note">HA patterns, CDC pipelines, sharding, and distributed timekeeping (HLC, TrueTime, Spanner)</p>
+      </div>
+      <div class="skill-group">
+        <p class="label" style="color:var(--cyan)">ML &amp; Signal</p>
+        <p class="items">PyTorch, convolutional autoencoders, RTL-SDR capture pipelines</p>
+      </div>
+      <div class="skill-group">
+        <p class="label" style="color:var(--cyan)">Tooling</p>
+        <p class="items">Next.js, NextAuth, Git, tmux, Claude Code workflows</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="links" class="reveal">
+  <div class="wrap">
+    <p class="label">Links</p>
+    <div class="links">
+      <a href="https://minastech.ca" target="_blank" rel="noopener">Minas Tech</a>
+      <a href="#" target="_blank" rel="noopener">GitHub</a>
+      <a href="#" target="_blank" rel="noopener">Email</a>
+    </div>
+    <!--<p class="foot-note">Built and deployed on GitHub Pages.</p>-->
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  revealEls.forEach(el=>io.observe(el));
+
+  // Signal trace canvas — ambient oscilloscope line with occasional flagged anomalies
+  const canvas = document.getElementById('trace');
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr;
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth; h = canvas.clientHeight = canvas.parentElement.offsetHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  let t = 0;
+  let nextAnomaly = 140 + Math.random()*160;
+  let anomalyTimer = 0;
+  const points = 220;
+
+  function frame(){
+    ctx.clearRect(0,0,w,h);
+    t += 1;
+    anomalyTimer++;
+
+    const baseY = h*0.62;
+    const amp = h*0.09;
+
+    ctx.beginPath();
+    for(let i=0;i<=points;i++){
+      const x = (i/points)*w;
+      const phase = (i*0.09) + t*0.045;
+      let y = baseY + Math.sin(phase)*amp*0.5 + Math.sin(phase*2.3)*amp*0.18;
+
+      // inject an anomaly spike near a moving window
+      const anomalyX = (nextAnomaly % points);
+      const dist = Math.abs(i - anomalyX);
+      if(anomalyTimer > nextAnomaly - 40 && anomalyTimer < nextAnomaly + 40 && dist < 6){
+        y -= amp*2.2*(1-dist/6);
+      }
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = 'rgba(95,191,179,0.55)';
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    if(anomalyTimer > nextAnomaly + 40){
+      anomalyTimer = 0;
+      nextAnomaly = 140 + Math.random()*160;
+    }
+
+    requestAnimationFrame(frame);
+  }
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    requestAnimationFrame(frame);
+  }
+</script>
+
+</body>
+</html>

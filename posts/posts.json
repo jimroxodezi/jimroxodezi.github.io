@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "hello-world",
+    "title": "Starting this blog",
+    "date": "2026-07-22",
+    "excerpt": "Why I'm writing here, and what to expect."
+  },
+  {
+    "slug": "raft-lite-notes",
+    "title": "Notes on building a Raft-lite coordinator",
+    "date": "2026-07-15",
+    "excerpt": "What dbfailsim's five-node cluster taught me about split brain and replica lag."
+  }
+]
