@@ -10,5 +10,11 @@
     "title": "Notes on building a Raft-lite coordinator",
     "date": "2026-07-15",
     "excerpt": "What dbfailsim's five-node cluster taught me about split brain and replica lag."
+  },
+  {
+    "slug": "questions-post",
+    "title": "On Questions",
+    "date": "2026-07-22",
+    "excerpt": "Asking good questions is a litmus test for understanding."
   }
 ]
