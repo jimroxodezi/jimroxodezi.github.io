@@ -54,5 +54,3 @@ Nowhere have I found this idea more practically useful than in software engineer
 **Architecture and technical-debt decisions live or die on the questions asked before a single line of code is written.** "Why does this service own this data?" "What breaks if this queue backs up for ten minutes?" "Who else is depending on this API staying exactly as it is?" These are first-principles questions about a system, in exactly the sense described above—why, how, who, when—and skipping them is how you end up with architecture that technically satisfies today's request while quietly making next year's request much harder to satisfy.
 
 If there's one thread running through all of this, it's that in software, the cost of a wrong answer is rarely the answer itself—it's having built on top of it before anyone asked the question that would have caught it. Learning to ask the right question, early and precisely, is cheaper than almost anything you'll ever do to fix the consequences of not having asked it.
-
----
