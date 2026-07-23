@@ -93,6 +93,16 @@
       return;
     }
 
+    // Prefer the pre-rendered page (tools/build.js) when it exists;
+    // fall back to client-side rendering for unlisted drafts.
+    try{
+      const head = await fetch(`posts/${encodeURIComponent(slug)}.html`, {method:'HEAD'});
+      if(head.ok){
+        location.replace(`posts/${encodeURIComponent(slug)}.html`);
+        return;
+      }
+    }catch(e){ /* offline or file:// — fall through to client render */ }
+
     try{
       const res = await fetch(`posts/${slug}.md`);
       if(!res.ok) throw new Error('not found');

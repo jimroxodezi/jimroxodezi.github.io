@@ -1,15 +1,15 @@
 [
   {
-    "slug": "hello-world",
-    "title": "Starting this blog",
-    "date": "2026-07-22",
-    "excerpt": "Why I'm writing here, and what to expect."
+    "slug": "2026-update",
+    "title": "2026 Update",
+    "date": "2026-07-10",
+    "excerpt": "Reading and writing are the same skill, really"
   },
   {
-    "slug": "raft-lite-notes",
-    "title": "Notes on building a Raft-lite coordinator",
-    "date": "2026-07-15",
-    "excerpt": "What dbfailsim's five-node cluster taught me about split brain and replica lag."
+    "slug": "dist-sys-notes",
+    "title": "Notes on Distributed Systems",
+    "date": "2026-07-23",
+    "excerpt": "My personal notes on distributed systems."
   },
   {
     "slug": "questions-post",
