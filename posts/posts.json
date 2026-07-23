@@ -22,5 +22,11 @@
     "title": "On Reading and Writing",
     "date": "2026-07-22",
     "excerpt": "Reading and writing are the same skill, really"
+  },
+  {
+    "slug": "ppt-post",
+    "title": "Programs, Processes, and Threads",
+    "date": "2022-12-27",
+    "excerpt": "Asking good questions is a litmus test for understanding."
   }
 ]
