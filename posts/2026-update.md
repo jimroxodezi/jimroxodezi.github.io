@@ -1,6 +1,7 @@
 ---
 title: Starting this blog
 date: 2026-07-22
+excerpt: Reading and writing are the same skill, really
 ---
 
 I'm starting this to write down the things I actually learn while building — not polished tutorials, just the notes I'd want to find if I searched for the problem again in six months.

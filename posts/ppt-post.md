@@ -3,6 +3,7 @@ title: Programs, Processes And Threads
 author: Jimrox Odezi
 published: 2022-12-27
 updated: 2026-07-23
+excerpt: Asking good questions is a litmus test for understanding.
 ---
 
 *A note before you read on: this is one of my earliest posts, and re-reading it now, there were a few spots where I'd simplified things past the point of being quite right—especially around green threads, hyperthreading, and what "achieving parallelism" actually requires. I've fixed those, and used the excuse to go a fair bit deeper into how the OS actually pulls this off, since I think that's the interesting part.*

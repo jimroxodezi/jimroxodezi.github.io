@@ -3,6 +3,7 @@ title: On Questions.
 author: Jimrox Odezi
 published: 2023-05-31
 updated: 2026-07-23
+excerpt: Asking good questions is a litmus test for understanding.
 ---
 
 *A note before you read on: the original version of this was short, and jumped straight to the abstract point without ever landing it anywhere concrete. I still believe the core idea, so I've kept it, given it more room, and this time actually walked it all the way down into software engineering, which is where I find myself applying it almost daily.*

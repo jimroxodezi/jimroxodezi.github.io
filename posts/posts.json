@@ -1,38 +1,38 @@
 [
   {
-    "slug": "2026-update",
-    "title": "2026 Update",
-    "date": "2026-07-10",
-    "excerpt": "Reading and writing are the same skill, really"
-  },
-  {
     "slug": "dist-sys-notes",
-    "title": "Notes on Distributed Systems",
+    "title": "Notes on building a Raft-lite coordinator",
     "date": "2026-07-23",
     "excerpt": "My personal notes on distributed systems."
   },
   {
-    "slug": "questions-post",
-    "title": "On Questions",
-    "date": "2023-05-31",
-    "excerpt": "Asking good questions is a litmus test for understanding."
-  },
-  {
-    "slug": "reading-and-writing",
-    "title": "On Reading and Writing",
-    "date": "2022-12-27",
+    "slug": "2026-update",
+    "title": "Starting this blog",
+    "date": "2026-07-22",
     "excerpt": "Reading and writing are the same skill, really"
   },
   {
-    "slug": "ppt-post",
-    "title": "Programs, Processes, and Threads",
-    "date": "2022-12-27",
+    "slug": "questions-post",
+    "title": "On Questions.",
+    "date": "2023-05-31",
     "excerpt": "Asking good questions is a litmus test for understanding."
   },
   {
     "slug": "understanding-nodejs",
     "title": "Understanding Node.js",
     "date": "2023-03-11",
-    "excerpt": "A deep dive into Node.js internals."
+    "excerpt": "A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were…"
+  },
+  {
+    "slug": "ppt-post",
+    "title": "Programs, Processes And Threads",
+    "date": "2022-12-27",
+    "excerpt": "Asking good questions is a litmus test for understanding."
+  },
+  {
+    "slug": "reading-and-writing",
+    "title": "On Reading And Writing",
+    "date": "2022-12-27",
+    "excerpt": "Reading and writing are the same skill, really"
   }
 ]

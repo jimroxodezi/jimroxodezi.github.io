@@ -3,6 +3,7 @@ title: On Reading And Writing
 author: Jimrox Odezi
 published: 2022-12-27
 updated: 2026-07-23
+excerpt: Reading and writing are the same skill, really
 ---
 
 *A note before you read on: this is one of my first posts, short and a bit underdeveloped compared to how I'd write it now. There wasn't really anything technically wrong in it—just a lot of typos I'm embarrassed by, and ideas I stated as one-liners that deserved more room to breathe. So I've cleaned it up and given them that room.*
