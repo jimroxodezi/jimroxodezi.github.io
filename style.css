@@ -155,7 +155,16 @@
 .post-body{max-width:640px; color:var(--text); font-size:1.02rem;}
 .post-body h2{font-family:var(--display); font-size:1.4rem; margin:36px 0 14px; font-weight:600;}
 .post-body h3{font-family:var(--display); font-size:1.15rem; margin:28px 0 12px; font-weight:600;}
-.post-body p{margin:0 0 18px; max-width:100%;}
+/*.post-body p{margin:0 0 18px; max-width:100%;}*/
+.post-body p {
+  margin: 0 0 18px;
+  max-width: 100%;
+
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
 .post-body a{border-bottom:1px solid var(--cyan);}
 .post-body code{
   font-family:var(--mono); font-size:0.88em; background:var(--bg-panel);
