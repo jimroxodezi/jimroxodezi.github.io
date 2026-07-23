@@ -28,5 +28,11 @@
     "title": "Programs, Processes, and Threads",
     "date": "2022-12-27",
     "excerpt": "Asking good questions is a litmus test for understanding."
+  },
+  {
+    "slug": "understanding-nodejs",
+    "title": "Understanding Node.js",
+    "date": "2023-03-11",
+    "excerpt": "A deep dive into Node.js internals."
   }
 ]

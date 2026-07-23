@@ -5,10 +5,6 @@ published: 2023-05-31
 updated: 2026-07-23
 ---
 
-# On Questions.
-
-May 31, 2023 (updated Jul 23, 2026) • Jimrox Odezi
-
 *A note before you read on: the original version of this was short, and jumped straight to the abstract point without ever landing it anywhere concrete. I still believe the core idea, so I've kept it, given it more room, and this time actually walked it all the way down into software engineering, which is where I find myself applying it almost daily.*
 
 Asking the right questions can be a litmus test of the understanding of a subject. Asking questions is generally thought of as a way of seeking clarification and understanding, but that is not the whole idea of asking questions.

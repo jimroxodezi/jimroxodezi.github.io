@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Node.js — Jimrox</title>
+<meta name="description" content="A deep dive into Node.js internals.">
+<link rel="canonical" href="https://jimroxodezi.github.io/posts/understanding-nodejs.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jimroxodezi.github.io/posts/understanding-nodejs.html">
+<meta property="og:site_name" content="Jimrox">
+<meta property="og:title" content="Understanding Node.js">
+<meta property="og:description" content="A deep dive into Node.js internals.">
+<meta property="og:image" content="https://jimroxodezi.github.io/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over an oscilloscope trace with an anomaly spike">
+<meta property="article:published_time" content="2023-03-11">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Understanding Node.js">
+<meta name="twitter:description" content="A deep dive into Node.js internals.">
+<meta name="twitter:image" content="https://jimroxodezi.github.io/images/og.png">
+<link rel="icon" href="../images/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../images/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="../images/favicon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script src="../theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light mode">light</button>
+
+<nav class="sitemap">
+  <div class="wrap">
+    <a href="../index.html">Jimrox</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#projects">Projects</a>
+    <a href="../blog.html">Writing</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <a class="back-link" href="../blog.html">&larr; All posts</a>
+    <h1>Understanding Node.js</h1>
+    <p class="post-meta">March 11, 2023 · 17 min read</p>
+  </div>
+  <div class="post-body">
+<p>Mar 11, 2023 (updated Jul 23, 2026)</p>
+<p><em>A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were oversimplified or just wrong, so I&#39;ve gone back in and fixed them, updated the parts that time has moved past, and pushed the explanations down closer to the syscall and C-source level, because the &quot;beginner&quot; version I drafted at one point glossed over exactly the details that make this stuff interesting. The core ideas still hold up—I just understand them, and can now argue for them from the actual implementation, better than I did in 2023.</em></p>
+<p>I really didn&#39;t like Node.js or JavaScript as a programming language due to its seemingly difficult to understand programming constructs—and this made me shy away from web programming, especially front-end programming that makes heavy use of the JavaScript programming language. But with time, I started to understand the language (JavaScript) and the runtime (Node.js). This is true for understanding anything, innit?–getting to understand the basic building blocks and fundamental ideas that stack up to become the very intricate and often intimidating-to-beginners systems. It&#39;s a fact that if we give it time (and thorough learning), we can grok anything no matter how intricate it may seem.</p>
+<p>I love backend engineering and my first exposure to Node.js was through the Express.js framework. This is probably the way it is for most beginner programmers and the evidence is clear from many YouTube tutorials and blog posts about building web servers in Node.js. But premature exposure to frameworks like this can make us lose sight of the fundamental idea or underlying details and principles of a programming language or runtime—and the fundamentals here are genuinely a systems-programming topic, not just a JavaScript-API topic.</p>
+<h2>What Node.js actually is, precisely</h2>
+<p>Node.js is not a language—JavaScript is the language, V8 is the engine that compiles and executes it, and Node.js is the C++ host program that embeds V8 and links it against <strong>libuv</strong>, the C library that provides the actual event loop, non-blocking I/O abstraction, and threadpool. When you run <code>node app.js</code>, you are running a C++ binary that: starts a V8 isolate, compiles your JS, sets up a <code>uv_loop_t</code>, and then calls <code>uv_run()</code> on that loop for as long as there&#39;s work (handles or requests) keeping it alive. Everything downstream of that—<code>fs.readFile</code>, <code>setTimeout</code>, the HTTP server—is JavaScript-facing sugar over libuv primitives.</p>
+<p>That distinction matters because most of what makes Node.js <em>interesting</em> as a runtime isn&#39;t in V8 at all—it&#39;s in how libuv turns each operating system&#39;s native async I/O facilities into one uniform, cross-platform event loop.</p>
+<h2>Programming Paradigms</h2>
+<p>Node.js&#39;s event-driven model is a specific answer to a specific systems problem: how do you serve many concurrent connections without paying for one OS thread per connection? Ryan Dahl&#39;s original framing:</p>
+<blockquote>
+<p>No function performs direct I/O, to receive data from disk, network or another process, there must be a callback. The API should be familiar to client-side JavaScript and the Unix programming interface.</p>
+</blockquote>
+<p>—Ryan Dahl, on his initial presentation of the Node.js project.</p>
+<p>The alternative—thread-per-connection—has a real cost measured in kernel resources: each thread needs its own stack (typically megabytes of virtual address space reserved, even if not all resident), a kernel scheduling entity (a <code>task_struct</code> on Linux), and every blocking syscall it makes (<code>read()</code>, <code>recv()</code>, a blocking DB driver call) parks that whole thread, at which point the kernel scheduler has to context-switch away from it, which is itself not free—you&#39;re paying for register save/restore, TLB and cache effects, and scheduler bookkeeping, for a thread that is doing precisely nothing.</p>
+<p>Node.js instead keeps one OS thread running your JavaScript and pushes every I/O operation down through libuv, which either issues it as truly non-blocking against the kernel (sockets) or hands it to a worker thread in an internal pool (filesystem calls, DNS, some crypto)—either way, your one JS thread never calls a blocking syscall and never gets parked by the scheduler waiting on I/O. It just keeps pulling the next ready callback off a queue. <code>server.on()</code> being an alias for <code>server.addListener()</code>, and every I/O-capable object in Node.js being an <code>EventEmitter</code>, is the JS-facing surface of that decision:</p>
+<pre><code class="language-js">document.getElementById(&#39;btn&#39;).addEventListener(eventName, callback)
+</code></pre>
+<p>—the browser event model and Node.js&#39;s I/O model are the same <em>shape</em> of solution to two different instances of the same problem: &quot;don&#39;t block a thread waiting on something that finishes later; get notified.&quot;</p>
+<h2>Node Architecture, down to the syscalls</h2>
+<p>Node.js is not single-threaded per se—it is the JavaScript engine responsible for executing JavaScript code that is single-threaded. There is exactly one V8 isolate, one call stack, running on one OS thread—the &quot;main thread.&quot; Everything else is infrastructure libuv builds around that single thread.</p>
+<h3>The socket path: no threadpool involved</h3>
+<p>For network sockets, libuv doesn&#39;t use extra threads at all—it uses the operating system&#39;s native readiness-notification API, and this differs by platform:</p>
+<ul>
+<li><strong>Linux:</strong> <code>epoll</code> (<code>epoll_create</code>, <code>epoll_ctl</code>, <code>epoll_wait</code>)</li>
+<li><strong>macOS/BSD:</strong> <code>kqueue</code></li>
+<li><strong>Windows:</strong> I/O Completion Ports (IOCP)—notably the odd one out, since IOCP is a <em>completion</em>-based model (tells you when an operation has finished) rather than a <em>readiness</em>-based model (tells you when an fd is ready to read/write without blocking). libuv&#39;s Windows backend has to emulate readiness semantics on top of a completion-based API, which is a genuinely nontrivial piece of engineering hiding under a single cross-platform <code>uv_poll_t</code> abstraction.</li>
+</ul>
+<p>The mechanism, concretely, on Linux: every socket libuv cares about is set non-blocking (<code>O_NONBLOCK</code>) and registered with a single <code>epoll</code> instance via <code>epoll_ctl(EPOLL_CTL_ADD, ...)</code>. Each iteration of the event loop calls <code>epoll_wait()</code> once, with a computed timeout (more on that below), and gets back a list of file descriptors that are ready for reading or writing <em>right now</em>, without blocking. Node.js/libuv then calls <code>read()</code>/<code>write()</code> on exactly those fds, which are guaranteed not to block since the kernel just told you they&#39;re ready. This is the entire trick behind &quot;handle thousands of concurrent connections with one thread&quot;: a single <code>epoll_wait()</code> call scales to tens of thousands of watched file descriptors far better than would one thread per connection, because the kernel is doing the multiplexing, not your userland scheduler.</p>
+<h3>The threadpool path: for things epoll can&#39;t help with</h3>
+<p>Not everything has a readiness-notification API. Local filesystem I/O is the big one—POSIX file I/O syscalls (<code>read()</code>, <code>open()</code>, <code>stat()</code>) don&#39;t have a portable non-blocking readiness mechanism the way sockets do, so libuv can&#39;t just epoll its way out of blocking on disk. Instead, libuv maintains an internal <strong>threadpool</strong>—four threads by default (<code>UV_THREADPOOL_SIZE</code>, tunable up to 1024)—implemented with a work queue guarded by a mutex, with worker threads blocked on a condition variable until work is pushed. When you call <code>fs.readFile()</code>, Node.js queues a work item onto that pool; a worker thread wakes up, makes the (blocking, as far as it&#39;s concerned) syscall itself, and when it completes, signals back to the main loop via a <code>uv_async_t</code> handle—an inter-thread signaling primitive libuv exposes precisely for &quot;wake the main loop up, something finished on another thread.&quot; The callback you wrote in JS still only ever executes on the main thread; the threadpool&#39;s job is purely to absorb the blocking syscall so the main thread never has to.</p>
+<p>DNS resolution (<code>dns.lookup</code>, which shells out to the OS&#39;s resolver, <code>getaddrinfo()</code>) and some CPU-heavy crypto/zlib operations also go through this same pool, for the same reason: no portable non-blocking syscall exists for them.</p>
+<pre><code>                    Main thread (V8 + libuv event loop)
+                                  │
+              ┌───────────────────┼────────────────────┐
+              │                   │                     │
+        epoll_wait()        uv__run_timers()      uv__run_pending()
+       (sockets, TTY,        (min-heap of          (queued threadpool
+        pipes — readiness)    uv_timer_t)           completions via
+              │                                      uv_async_t)
+              ▼                                            ▲
+        kernel notifies                                    │
+        fd ready, then                              ┌──────┴───────┐
+        read()/write()                              │  Threadpool   │
+        (non-blocking,                               │  4 workers,   │
+        never parks the                              │  mutex +      │
+        main thread)                                 │  condvar queue│
+                                                       │  fs, dns,     │
+                                                       │  some crypto  │
+                                                       └───────────────┘
+</code></pre>
+<p>This is the distinction I only gestured at back in 2023: the threadpool is internal plumbing Node manages for you, invisibly, behind APIs like <code>fs.readFile()</code>. <code>worker_threads</code>, by contrast, spins up an entirely separate V8 isolate with its own heap and its own event loop, on its own OS thread, that <em>you</em> create and manage explicitly, for genuinely CPU-bound JavaScript—work that would otherwise occupy the one call stack that everything else needs. <code>child_process</code> is the third, coarsest tool: a whole separate OS process, for when you want isolation at the process level (a different program entirely, like <code>ffmpeg</code>) rather than just a separate thread of JS execution.</p>
+<p>According to the Node.js docs:</p>
+<blockquote>
+<p>When Node.js performs an I/O operation, like reading from the network, accessing a database or the filesystem, instead of blocking the thread and wasting CPU cycles waiting, Node.js will resume the operations when the response comes back.</p>
+</blockquote>
+<p>This is true, but the mechanism differs by I/O type in exactly the way described above—sockets via kernel readiness APIs, filesystem via the threadpool—and conflating the two, which I did in the original version of this post, misses a real engineering distinction that shows up the moment you tune <code>UV_THREADPOOL_SIZE</code> and watch filesystem-heavy workloads speed up while socket-heavy workloads are unaffected by that same knob.</p>
+<h2>Events and EventEmitters</h2>
+<p><code>EventEmitter</code> is the userland pattern that libuv&#39;s callback-based internals surface through. <code>eventEmitter.on()</code> is a straight alias for <code>eventEmitter.addListener()</code>—verifiable in the <a href="https://github.com/nodejs/node/blob/main/lib/events.js">Node.js <code>events</code> source</a>—and every I/O-capable object (<code>net.Server</code>, <code>fs.ReadStream</code>, <code>process</code> itself) is built on it. Worth being precise about the mechanics, because they&#39;re easy to get wrong once you&#39;re reasoning about ordering and correctness:</p>
+<pre><code class="language-js">const EventEmitter = require(&#39;events&#39;);
+
+class OrderTracker extends EventEmitter {
+  ship(orderId) {
+    this.emit(&#39;shipped&#39;, orderId);
+  }
+}
+
+const tracker = new OrderTracker();
+tracker.on(&#39;shipped&#39;, (orderId) =&gt; console.log(`Order ${orderId} has shipped!`));
+tracker.on(&#39;shipped&#39;, (orderId) =&gt; console.log(`Sending confirmation email for order ${orderId}...`));
+tracker.ship(42);
+</code></pre>
+<p><code>emit()</code> is <strong>synchronous</strong>—it walks the listener array for that event name and invokes each one, in registration order, on the current call stack, before <code>emit()</code> itself returns. It does not enqueue anything onto the event loop or the microtask queue; there&#39;s no phase transition involved. This has two consequences worth internalizing: first, if a listener throws and you haven&#39;t wrapped the <code>emit()</code> call or handled <code>&#39;error&#39;</code>, that exception propagates synchronously out of <code>emit()</code> to its caller, exactly like any other synchronous throw—it does not become an unhandled-rejection-style event. Second, <code>&#39;error&#39;</code> is special-cased in <code>EventEmitter</code> itself: if you <code>emit(&#39;error&#39;, ...)</code> and there is no <code>&#39;error&#39;</code> listener registered, <code>EventEmitter</code>&#39;s internal logic throws the error itself, which (absent a process-level <code>&#39;uncaughtException&#39;</code> handler) crashes the process. It&#39;s a deliberate design choice to make error-handling non-optional for this one event name, in an otherwise fully generic, unenforced event system.</p>
+<h1>Node Event Loop</h1>
+<p>The event loop is <code>uv_run()</code>—a C function, part of libuv, executed on the main thread. It is not a metaphorical device; it&#39;s a real, boundedly-simple loop that, per iteration, walks fixed phases and, for each, drains whatever&#39;s ready, computing a bounded poll timeout so it doesn&#39;t spin the CPU when there&#39;s nothing to do. Concretely, in libuv&#39;s own terms:</p>
+<ol>
+<li><strong>Update the loop&#39;s cached time</strong> (<code>uv_update_time</code>)—an optimization: syscalls like <code>gettimeofday</code>/<code>clock_gettime</code> aren&#39;t free, so libuv reads the clock once per iteration and reuses that value everywhere it needs &quot;now&quot; within the iteration, rather than re-syscalling for every timer check.</li>
+<li><strong>Run due timers</strong> (<code>uv__run_timers</code>): timers are stored in a <strong>binary min-heap</strong>, keyed by absolute expiry time, so &quot;give me the next timer due&quot; is an O(1) peek and inserting/removing is O(log n)—the right data structure when you may have thousands of live timers and need to repeatedly ask &quot;what&#39;s next.&quot;</li>
+<li><strong>Run pending callbacks</strong> (<code>uv__run_pending</code>): certain callbacks deferred from the previous loop iteration—historically some TCP error callbacks—get their turn here.</li>
+<li><strong>Idle/prepare handles</strong>: internal-use handles, mostly not user-facing, that run every iteration regardless of whether there&#39;s I/O.</li>
+<li><strong>Compute the poll timeout, then block on it</strong> (<code>uv__io_poll</code>, wrapping <code>epoll_wait</code>/<code>kqueue</code>/IOCP as appropriate): this is the step that actually waits, and it&#39;s smarter than &quot;wait forever&quot; or &quot;spin&quot;—libuv computes the minimum of &quot;time until the next timer is due&quot; and &quot;infinite if there are no timers and no other pending handles,&quot; so the loop&#39;s underlying poll syscall blocks efficiently instead of busy-waiting, but wakes up in time to service the next timer even if no I/O ever arrives.</li>
+<li><strong>Check handles</strong> (<code>uv__run_check</code>): <code>setImmediate()</code> callbacks fire here.</li>
+<li><strong>Close callbacks</strong> (<code>uv__run_closing_handles</code>): fired for handles closed via <code>uv_close()</code>, e.g. a socket or handle emitting <code>&#39;close&#39;</code>.</li>
+<li>Then libuv decides whether to loop again, based on <code>uv_loop_alive()</code>—true if there are still active handles, active requests, or a nonzero <code>closing_handles</code> list. This is precisely the mechanism behind <code>.unref()</code>: an active <code>setInterval</code> normally keeps the process alive because it&#39;s a live handle; calling <code>.unref()</code> on it tells libuv &quot;don&#39;t count this handle when deciding whether to keep looping,&quot; which is how you can have a background timer that doesn&#39;t prevent your script from exiting once everything else is done.</li>
+</ol>
+<p>On top of and <em>between</em> every one of those phases (and between individual callbacks within the timer and check phases), V8&#39;s <strong>microtask queue</strong> is drained—this is a V8-level concept, not a libuv one, and it&#39;s why <code>process.nextTick</code> (a Node.js-specific, even-higher-priority queue processed before V8&#39;s promise microtask queue) and native Promise <code>.then()</code> callbacks both run before the loop is allowed to proceed to its next phase, no matter how &quot;ready&quot; a competing timer or I/O callback is.</p>
+<p>Whenever an async task completes in libuv, the associated JS callback only actually executes once the call stack is empty—the normal flow of synchronous execution is never preempted to run a callback mid-flight. That single-threaded, run-to-completion guarantee for each JS callback (no other callback can interleave with a currently-running one) is, incidentally, why Node.js developers get away without most of the manual locking a systems programmer would otherwise reach for when sharing state across concurrent units of work: within one event loop, there&#39;s no true parallel mutation of shared JS state to race on. (This guarantee stops applying the moment you bring in <code>worker_threads</code> with <code>SharedArrayBuffer</code>s—now you do have real parallelism and real races, and need <code>Atomics</code> accordingly.)</p>
+<h2>Phases, precisely</h2>
+<h3>Microtask queues</h3>
+<p>Drained between every phase, and between each individual callback in the timer/check phases.</p>
+<ol>
+<li><code>process.nextTick</code> queue — Node.js-specific, highest priority, processed to <em>exhaustion</em> before the promise queue even starts.</li>
+</ol>
+<pre><code class="language-js">process.nextTick(() =&gt; console.log(&quot;this is process.nextTick()&quot;));
+</code></pre>
+<p>Careless recursive <code>process.nextTick()</code> calls starve the loop entirely—since this queue must fully drain before the loop proceeds, an unbounded chain of them means the timer, poll, check, and close phases never get a turn, and I/O for the entire process appears to hang.</p>
+<ol start="2">
+<li>Promise microtask queue — V8-level, standard per the ECMAScript spec, not Node-specific.</li>
+</ol>
+<pre><code class="language-js">Promise.resolve().then(() =&gt; console.log(&quot;this is a promise&quot;));
+</code></pre>
+<h3>Timer phase — <code>uv__run_timers</code></h3>
+<p>Backed by a binary min-heap on expiry time; due timers run in expiry order.</p>
+<pre><code class="language-js">setTimeout(() =&gt; console.log(&quot;this is a timer callback&quot;), 0);
+</code></pre>
+<h3>Poll (I/O) phase — <code>uv__io_poll</code></h3>
+<p>Wraps <code>epoll_wait</code>/<code>kqueue</code>/IOCP. Socket and pipe callbacks land here once the kernel reports readiness; threadpool completions (<code>fs.readFile</code>, etc.) are delivered back to this same iteration via the <code>uv_async_t</code> wake mechanism described above.</p>
+<h3>Check phase — <code>uv__run_check</code></h3>
+<pre><code class="language-js">setImmediate(() =&gt; console.log(&quot;setImmediate function for check phase&quot;));
+</code></pre>
+<p>Designed specifically to run <em>immediately after</em> the poll phase in the same iteration—this is why <code>setImmediate</code> inside an I/O callback is deterministically ordered before a <code>setTimeout(fn, 0)</code> scheduled at the same point: the check phase for that iteration is guaranteed to run before the next iteration&#39;s timer phase.</p>
+<h3>Close callbacks phase — <code>uv__run_closing_handles</code></h3>
+<p>Fired from <code>uv_close()</code> on handles—sockets, timers, or anything else you can call <code>.close()</code>/let get garbage-collected via <code>.unref()</code>.</p>
+<h2>Execution order, traced at the instruction level</h2>
+<pre><code class="language-js">console.log(&#39;1: start&#39;);
+setTimeout(() =&gt; console.log(&#39;2: timeout&#39;), 0);
+Promise.resolve().then(() =&gt; console.log(&#39;3: promise&#39;));
+process.nextTick(() =&gt; console.log(&#39;4: nextTick&#39;));
+console.log(&#39;5: end&#39;);
+</code></pre>
+<p>Walking it against the actual mechanics above: <code>1: start</code> and <code>5: end</code> execute synchronously on the call stack—nothing about the event loop is even consulted yet, since the stack isn&#39;t empty. <code>setTimeout</code> inserts a node into libuv&#39;s timer min-heap with expiry <code>now + 0ms</code>, and returns immediately without running anything. <code>Promise.resolve().then(...)</code> schedules a V8 microtask. <code>process.nextTick(...)</code> schedules onto Node&#39;s separate, higher-priority nextTick queue. Once the synchronous script finishes and the call stack empties, V8/Node drain microtasks before the loop is permitted to advance to the timer phase at all: nextTick queue first (<code>4: nextTick</code>), then the promise queue (<code>3: promise</code>). Only then does <code>uv_run</code> proceed into <code>uv__run_timers</code>, find the (already-expired, since 0ms elapsed) timer, and fire it (<code>2: timeout</code>):</p>
+<pre><code>1: start
+5: end
+4: nextTick
+3: promise
+2: timeout
+</code></pre>
+<p>The general principle: <strong>the call stack always fully unwinds before any queue is serviced, microtasks always fully drain before any macrotask (timer/I/O/check) phase runs, and nextTick always drains before the promise microtask queue.</strong> All three of those are separate priority guarantees, enforced at separate layers (V8 for promises, Node.js&#39;s bindings for <code>nextTick</code>, libuv for phase ordering), which is exactly why the mental model needs three distinct queues rather than one.</p>
+<h2>Where the real engineering trade-offs live</h2>
+<p>A few things that separate &quot;I can use async/await&quot; from actually reasoning about this as a systems problem:</p>
+<ul>
+<li><strong>Backpressure is a real, syscall-adjacent concern, not just an API detail.</strong> <code>stream.write()</code> returns <code>false</code> when the internal buffer exceeds <code>highWaterMark</code>, at which point you&#39;re expected to wait for <code>&#39;drain&#39;</code> before writing more. Ignore it and you&#39;re buffering unbounded data in process memory because the consumer (a socket, a file) can&#39;t keep up with the producer—this is precisely the same backpressure problem you&#39;d reason about with a bounded ring buffer between producer/consumer threads in any other systems context; Node.js just surfaces it as an event instead of a blocking write.</li>
+<li><strong>The threadpool size is a real capacity-planning knob</strong>, not an obscure env var. Four threads (default) means at most four filesystem/DNS/crypto operations can be <em>in flight</em> concurrently regardless of how many <code>fs.readFile()</code> calls you queue—the fifth call&#39;s work item just sits in libuv&#39;s internal queue until a worker frees up. Under filesystem-heavy load, <code>UV_THREADPOOL_SIZE</code> is a lever that actually moves throughput; under socket-heavy load (epoll-driven), it does essentially nothing, because that path never touches the pool.</li>
+<li><strong>V8 itself has its own internals worth knowing about</strong>, independent of the event loop: it compiles your JS through a fast, unoptimized baseline interpreter (Ignition) first, then promotes (&quot;tiers up&quot;) hot functions to an optimizing JIT (TurboFan) once it&#39;s collected enough type feedback via inline caches to make aggressive assumptions about the shapes of your objects; it also runs a generational garbage collector—a fast scavenger for the young generation, a slower mark-and-sweep/compact for the old generation—and heap layout decisions (monomorphic vs. polymorphic property access, &quot;hidden classes&quot; changing shape) affect real throughput in ways that show up in profiling long before the event loop itself is your bottleneck.</li>
+<li><strong><code>.ref()</code>/<code>.unref()</code> is the process-liveness API most people never touch</strong>, and it&#39;s directly downstream of <code>uv_loop_alive()</code>&#39;s bookkeeping described above—a handle you <code>.unref()</code> doesn&#39;t count toward &quot;should the process keep running,&quot; which is exactly how you write a background heartbeat timer that doesn&#39;t prevent a CLI tool or script from exiting cleanly once its actual work is done.</li>
+</ul>
+<h2>Where things stand now (2026)</h2>
+<p>None of the mechanics above have changed—<code>uv_run</code>&#39;s phase structure, the timer min-heap, the threadpool&#39;s mutex/condvar work queue, epoll/kqueue/IOCP as the socket backends, are all the same design as when this post was first written. What&#39;s changed is the surface API and the current release lineup: Node.js 24 is the current Active LTS line, Node.js 22 is in Maintenance LTS, and Node.js 26 is on the &quot;Current&quot; line ahead of entering LTS later this year. Worth knowing:</p>
+<ul>
+<li><strong><code>fetch</code> is built in</strong>, backed by Undici, Node&#39;s own HTTP client implementation—no more <code>node-fetch</code>.</li>
+<li><strong>A built-in test runner</strong> (<code>node --test</code>) exists if you want to avoid a Jest/Mocha dependency.</li>
+<li><strong><code>--watch</code></strong> gives you nodemon-equivalent restart-on-change behavior natively.</li>
+<li><strong>The permission model (<code>--permission</code>)</strong> is stable, letting you sandbox what a process can touch at the filesystem/network/child-process level—enforced at the Node.js binding layer, before a syscall like <code>open()</code> is even attempted.</li>
+<li><strong>ESM/CJS interop</strong> is considerably less painful than it was in 2023.</li>
+</ul>
+<p>None of that changes anything about the event loop or <code>EventEmitter</code> mechanics described above—it&#39;s the same runtime, same libuv, same epoll/kqueue/IOCP split underneath. It&#39;s just got a friendlier API surface than it did when I first wrote this.</p>
+<h2>References</h2>
+<ol>
+<li><a href="https://nodejs.org/en/docs">Node.js Official Docs</a></li>
+<li><a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick">Node.js Event Loop docs</a></li>
+<li><a href="https://docs.libuv.org/en/v1.x/design.html">libuv design overview</a></li>
+<li><a href="https://github.com/libuv/libuv">libuv source, GitHub</a></li>
+</ol>
+<p>[^1]: Blocking I/O has to do with data fetch outside RAM from disk, network or other processes and takes a lot of CPU cycles, unlike non-blocking I/O which has to do with data fetch from CPU caches or at most RAM and takes fewer CPU cycles.</p>
+
+  </div>
+</div>
+
+<footer></footer>
+
+<script>
+  document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+</script>
+
+</body>
+</html>

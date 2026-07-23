@@ -5,10 +5,6 @@ published: 2022-12-27
 updated: 2026-07-23
 ---
 
-# On Reading And Writing
-
-Dec 27, 2022 (updated Jul 23, 2026) • Jimrox Odezi
-
 *A note before you read on: this is one of my first posts, short and a bit underdeveloped compared to how I'd write it now. There wasn't really anything technically wrong in it—just a lot of typos I'm embarrassed by, and ideas I stated as one-liners that deserved more room to breathe. So I've cleaned it up and given them that room.*
 
 > "… I am just now beginning to discover the difficulty of expressing one's ideas on
