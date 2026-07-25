@@ -1,7 +1,7 @@
 [
   {
     "slug": "dist-sys-notes",
-    "title": "Notes on building a Raft-lite coordinator",
+    "title": "Notes on Learning Distributed Systems",
     "date": "2026-07-23",
     "excerpt": "My personal notes on distributed systems."
   },
