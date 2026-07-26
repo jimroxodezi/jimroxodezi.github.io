@@ -7,6 +7,8 @@ excerpt: My personal notes on distributed systems.
 
 This is going to be a progressive note on my learnings on distributed systems. I'll keep adding to it as I learn more. I just hope it remains coherent as I'll keep adding to it...or better still, I'll make this a multi-part series.
 
+Every distributed systems course or blog post out there already has some introduction of what distributed systems are and the ideas of nodes, communication, and networking and all that. I'm not going to be repeating that here. I want to assume that anyone interested in reading these notes is already familiar with the basic concepts of distributed systems.
+
 I've observed that learning about distributed systems—in theory and practice—is actually very hard. Though a beginner, I'm starting out with reading distributed systems papers and also following up with the popular Martin Klepmann's distributed systems course on youtube. I watched the course about two years ago but most of it went over my head as was missing out on some requisite knowledge. But I believe I'm ready to follow through the course now and also be able to follow through distributed systems papers. 
 
 Reading through research papers is quite easier with the advent of LLMs. You can literally use LLMs to get a thorough breakdown and summary of these papers without getting into the pedantic details that sometimes feels like gatekeeping lol.
