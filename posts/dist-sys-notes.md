@@ -10,6 +10,6 @@ This is going to be a progressive note on my learnings on distributed systems. I
 Reading through research papers is quite easier with the advent of LLMs. You can literally use LLMs to get a thorough breakdown and summary of these papers without getting into the pedantic details that sometimes feels like gatekeeping lol.
 
 I used claude to curate a list of papers to read and I think the recommended list was good. I'm starting out with three papers which are like a philosophical core to most distributed system ideas:
-- Time, Clocks, and the Ordering of Events in a Distributed System --- Lamport (1978): [paper](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
-- Impossibility of Distributed Consensus with One Faulty Process (FLP) --- Fischer, Lynch, and Paterson (1985): [paper](https://dl.acm.org/doi/10.1145/3168.3169)
-- Unreliable Failure Detectors for Reliable Distributed Systems --- Chandra, Toueg (1996): [paper](https://dl.acm.org/doi/10.1145/1292517.1292523)
+- [Time, Clocks, and the Ordering of Events in a Distributed System — Lamport (1978)](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) : This is very authoritative and influential paper on distributed system timing and event ordering.
+- [Impossibility of Distributed Consensus with One Faulty Process (FLP) — Fischer, Lynch, and Paterson (1985)](https://dl.acm.org/doi/10.1145/3168.3169) : This paper shows that consensus cannot be achieved in a distributed system with one faulty process.
+- [Unreliable Failure Detectors for Reliable Distributed Systems — Chandra, Toueg (1996)](https://dl.acm.org/doi/10.1145/1292517.1292523) : This paper introduces unreliable failure detectors, which are crucial for reliable distributed systems.
