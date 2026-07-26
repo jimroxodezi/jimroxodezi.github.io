@@ -215,6 +215,21 @@
 }
 .loading{font-family:var(--mono); font-size:13px; color:var(--text-muted);}
 
+/* ---------- PREV/NEXT POST NAV ---------- */
+.post-nav{
+  display:flex; justify-content:space-between; gap:20px;
+  max-width:720px; margin-top:56px; padding-top:22px;
+  border-top:1px solid var(--line);
+}
+.post-nav a{display:flex; flex-direction:column; gap:5px; max-width:46%;}
+.post-nav a.older{text-align:right; margin-left:auto;}
+.post-nav .dir{
+  font-family:var(--mono); font-size:11.5px; color:var(--text-muted);
+  letter-spacing:0.08em; text-transform:uppercase;
+}
+.post-nav .t{font-family:var(--display); font-size:1.02rem; font-weight:600; color:var(--text);}
+.post-nav a:hover .t, .post-nav a:hover .dir{color:var(--amber);}
+
 /* ---------- SYNTAX HIGHLIGHTING (highlight.js) ----------
    Token colors ride on the site variables, so they follow the
    light/dark toggle automatically. */

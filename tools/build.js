@@ -78,9 +78,17 @@ function autoExcerpt(content) {
 
 /* ---------- post page template ---------- */
 
-function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml }) {
+function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml, newer, older }) {
   const url = `${SITE}/posts/${slug}.html`;
   const meta = dateHuman ? `${dateHuman} · ${minutes} min read` : `${minutes} min read`;
+  const navLink = (p, dir, arrowLabel) => p
+    ? `<a class="${dir}" href="${p.slug}.html"><span class="dir">${arrowLabel}</span><span class="t">${esc(p.title)}</span></a>`
+    : '<span></span>';
+  const postNav = (newer || older) ? `
+<nav class="post-nav">
+  ${navLink(newer, 'newer', '&larr; newer')}
+  ${navLink(older, 'older', 'older &rarr;')}
+</nav>` : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,6 +144,7 @@ ${dateISO ? `<meta property="article:published_time" content="${dateISO}">\n` : 
   <div class="post-body">
 ${bodyHtml}
   </div>
+${postNav}
 </div>
 
 <footer></footer>
@@ -173,7 +182,7 @@ posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 /* ---------- build pages ---------- */
 
-for (const p of posts) {
+for (const [i, p] of posts.entries()) {
   const html = postPage({
     slug: p.slug,
     title: p.title,
@@ -182,6 +191,8 @@ for (const p of posts) {
     dateHuman: formatDate(p.date, 'long'),
     minutes: readingTime(p.content),
     bodyHtml: marked.parse(p.content),
+    newer: posts[i - 1] || null,   // posts are sorted newest-first
+    older: posts[i + 1] || null,
   });
   fs.writeFileSync(path.join(POSTS_DIR, `${p.slug}.html`), html);
   console.log(`built: posts/${p.slug}.html`);
