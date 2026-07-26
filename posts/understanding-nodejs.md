@@ -14,7 +14,7 @@ I really didn't like Node.js or JavaScript as a programming language due to its 
 
 I love backend engineering and my first exposure to Node.js was through the Express.js framework. This is probably the way it is for most beginner programmers and the evidence is clear from many YouTube tutorials and blog posts about building web servers in Node.js. But premature exposure to frameworks like this can make us lose sight of the fundamental idea or underlying details and principles of a programming language or runtime—and the fundamentals here are genuinely a systems-programming topic, not just a JavaScript-API topic.
 
-## What Node.js actually is, precisely
+## What Node.js actually is, 
 
 Node.js is not a language—JavaScript is the language, V8 is the engine that compiles and executes it, and Node.js is the C++ host program that embeds V8 and links it against **libuv**, the C library that provides the actual event loop, non-blocking I/O abstraction, and threadpool. When you run `node app.js`, you are running a C++ binary that: starts a V8 isolate, compiles your JS, sets up a `uv_loop_t`, and then calls `uv_run()` on that loop for as long as there's work (handles or requests) keeping it alive. Everything downstream of that—`fs.readFile`, `setTimeout`, the HTTP server—is JavaScript-facing sugar over libuv primitives.
 
@@ -108,7 +108,7 @@ tracker.ship(42);
 
 `emit()` is **synchronous**—it walks the listener array for that event name and invokes each one, in registration order, on the current call stack, before `emit()` itself returns. It does not enqueue anything onto the event loop or the microtask queue; there's no phase transition involved. This has two consequences worth internalizing: first, if a listener throws and you haven't wrapped the `emit()` call or handled `'error'`, that exception propagates synchronously out of `emit()` to its caller, exactly like any other synchronous throw—it does not become an unhandled-rejection-style event. Second, `'error'` is special-cased in `EventEmitter` itself: if you `emit('error', ...)` and there is no `'error'` listener registered, `EventEmitter`'s internal logic throws the error itself, which (absent a process-level `'uncaughtException'` handler) crashes the process. It's a deliberate design choice to make error-handling non-optional for this one event name, in an otherwise fully generic, unenforced event system.
 
-# Node Event Loop
+## Node Event Loop
 
 The event loop is `uv_run()`—a C function, part of libuv, executed on the main thread. It is not a metaphorical device; it's a real, boundedly-simple loop that, per iteration, walks fixed phases and, for each, drains whatever's ready, computing a bounded poll timeout so it doesn't spin the CPU when there's nothing to do. Concretely, in libuv's own terms:
 
