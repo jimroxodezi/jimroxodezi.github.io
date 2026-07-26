@@ -14,6 +14,8 @@ I've observed that learning about distributed systems—in theory and practice�
 Reading through research papers is quite easier with the advent of LLMs. You can literally use LLMs to get a thorough breakdown and summary of these papers without getting into the pedantic details that sometimes feels like gatekeeping lol.
 
 I used claude to curate a list of papers to read and I think the recommended list was good. I'm starting out with three papers which are like a philosophical core to most distributed system ideas:
-- [Time, Clocks, and the Ordering of Events in a Distributed System — Lamport (1978)](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) : This is very authoritative and influential paper on distributed system timing and event ordering.
-- [Impossibility of Distributed Consensus with One Faulty Process (FLP) — Fischer, Lynch, and Paterson (1985)](https://dl.acm.org/doi/10.1145/3168.3169) : This paper shows that consensus cannot be achieved in a distributed system with one faulty process.
-- [Unreliable Failure Detectors for Reliable Distributed Systems — Chandra, Toueg (1996)](https://dl.acm.org/doi/10.1145/1292517.1292523) : This paper introduces unreliable failure detectors, which are crucial for reliable distributed systems.
+- [Time, Clocks, and the Ordering of Events in a Distributed System — Lamport (1978)](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) : This is very authoritative and influential paper on distributed system timing and event ordering. It is one of the foremost papers in the field, providing the basis for many distributed system protocols and algorithms. It is quite easy to read and understand.
+
+- [Impossibility of Distributed Consensus with One Faulty Process (FLP) — Fischer, Lynch, and Paterson (1985)](https://dl.acm.org/doi/10.1145/3168.3169) : This paper shows that consensus cannot be achieved in a distributed system with one faulty process. It is a classic paper that laid the groundwork for many distributed system protocols.
+
+- [Unreliable Failure Detectors for Reliable Distributed Systems — Chandra, Toueg (1996)](https://dl.acm.org/doi/10.1145/1292517.1292523) : This paper introduces unreliable failure detectors, which are crucial for reliable distributed systems. It is a classic paper that introduced the concept of failure detectors.
