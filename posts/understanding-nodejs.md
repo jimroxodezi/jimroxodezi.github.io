@@ -3,6 +3,7 @@ title: Understanding Node.js
 author: Jimrox Odezi
 published: 2023-03-11
 updated: 2026-07-23
+excerpt: What Node.js actually is under the hood — V8, libuv, the event loop, and the threadpool, down to the syscalls.
 # draft: true
 ---
 

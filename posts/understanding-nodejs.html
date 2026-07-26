@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Understanding Node.js — Jimrox</title>
-<meta name="description" content="A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were…">
+<meta name="description" content="What Node.js actually is under the hood — V8, libuv, the event loop, and the threadpool, down to the syscalls.">
 <link rel="canonical" href="https://jimroxodezi.github.io/posts/understanding-nodejs.html">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://jimroxodezi.github.io/posts/understanding-nodejs.html">
 <meta property="og:site_name" content="Jimrox">
 <meta property="og:title" content="Understanding Node.js">
-<meta property="og:description" content="A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were…">
+<meta property="og:description" content="What Node.js actually is under the hood — V8, libuv, the event loop, and the threadpool, down to the syscalls.">
 <meta property="og:image" content="https://jimroxodezi.github.io/images/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -18,8 +18,9 @@
 <meta property="article:published_time" content="2023-03-11">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Understanding Node.js">
-<meta name="twitter:description" content="A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were…">
+<meta name="twitter:description" content="What Node.js actually is under the hood — V8, libuv, the event loop, and the threadpool, down to the syscalls.">
 <meta name="twitter:image" content="https://jimroxodezi.github.io/images/og.png">
+<meta name="twitter:creator" content="@basedattribute">
 <link rel="icon" href="../images/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" href="../images/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="../images/favicon-192.png" sizes="192x192">

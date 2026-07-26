@@ -21,7 +21,7 @@
     "slug": "understanding-nodejs",
     "title": "Understanding Node.js",
     "date": "2023-03-11",
-    "excerpt": "A note before you read on: I wrote this back in 2023, when I was still finding my footing with Node.js. Re-reading it now, a few things I said were…"
+    "excerpt": "What Node.js actually is under the hood — V8, libuv, the event loop, and the threadpool, down to the syscalls."
   },
   {
     "slug": "ppt-post",

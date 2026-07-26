@@ -102,6 +102,7 @@ ${dateISO ? `<meta property="article:published_time" content="${dateISO}">\n` : 
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${SITE}/images/og.png">
+<meta name="twitter:creator" content="@basedattribute">
 <link rel="icon" href="../images/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" href="../images/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="../images/favicon-192.png" sizes="192x192">
