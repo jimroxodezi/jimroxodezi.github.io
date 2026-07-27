@@ -1,8 +1,8 @@
   :root{
-    --bg-deep:#0e1620;
-    --bg-panel:#161f29;
-    --bg-panel-2:#1b2530;
-    --line:#26323d;
+    --bg-deep:#1a1512;
+    --bg-panel:#231c17;
+    --bg-panel-2:#2a221c;
+    --line:#3a2f26;
     --amber:#e2a03f;
     --cyan:#5fbfb3;
     --text:#ece7dd;
@@ -42,7 +42,7 @@
     transition:border-color 0.2s ease, color 0.2s ease, background 0.3s ease;
   }
   .theme-toggle:hover{border-color:var(--amber); color:var(--amber);}
-  ::selection{background:var(--amber); color:#0e1620;}
+  ::selection{background:var(--amber); color:var(--bg-deep);}
   a{color:var(--cyan); text-decoration:none;}
   a:hover{color:var(--amber);}
   a:focus-visible, button:focus-visible{outline:2px solid var(--amber); outline-offset:3px;}
