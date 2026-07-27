@@ -1,25 +1,25 @@
   :root{
-    --bg-deep:#1a1512;
-    --bg-panel:#231c17;
-    --bg-panel-2:#2a221c;
-    --line:#3a2f26;
-    --amber:#e2a03f;
-    --cyan:#5fbfb3;
-    --text:#ece7dd;
-    --text-muted:#8fa0ac;
+    --bg-deep:#1e1610;
+    --bg-panel:#281e15;
+    --bg-panel-2:#31251a;
+    --line:#443528;
+    --amber:#e69a42;
+    --cyan:#a9b665;
+    --text:#ede4d3;
+    --text-muted:#a29682;
     --mono:'IBM Plex Mono', monospace;
     --sans:'IBM Plex Sans', sans-serif;
     --display:'Space Grotesk', sans-serif;
   }
   :root[data-theme="light"]{
-    --bg-deep:#f4f1ea;
-    --bg-panel:#ece8df;
-    --bg-panel-2:#e5e0d5;
-    --line:#d8d2c4;
-    --amber:#b0761c;
-    --cyan:#25776c;
-    --text:#22303c;
-    --text-muted:#5f6e7a;
+    --bg-deep:#f4f0e6;
+    --bg-panel:#ece6d9;
+    --bg-panel-2:#e5ddcd;
+    --line:#d8cfbc;
+    --amber:#a86f1a;
+    --cyan:#6b7434;
+    --text:#2e2618;
+    --text-muted:#6e6552;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
