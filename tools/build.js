@@ -73,6 +73,8 @@ function protectMath(content) {
     .split(/(```[\s\S]*?```|`[^`\n]*`)/)          // odd indices = code, skip
     .map((seg, i) => i % 2 === 1 ? seg : seg
       .replace(/\$\$[\s\S]+?\$\$/g, stash)
+      .replace(/\\\[[\s\S]+?\\\]/g, stash)        // \[...\] display
+      .replace(/\\\([\s\S]+?\\\)/g, stash)        // \(...\) inline
       // inline $...$: no leading/trailing space inside, not an escaped \$
       .replace(/(?<!\\)\$(?!\s)([^$\n]+?)(?<!\s)\$/g, stash))
     .join('');
@@ -84,9 +86,10 @@ function protectMath(content) {
 function restoreMath(html, math) {
   return html.replace(/@@MATH(\d+)@@/g, (_, i) => {
     const m = math[+i];
-    return m.startsWith('$$')
-      ? `\\[${esc(m.slice(2, -2))}\\]`
-      : `\\(${esc(m.slice(1, -1))}\\)`;
+    const display = m.startsWith('$$') || m.startsWith('\\[');
+    const d = m.startsWith('$$') || m.startsWith('\\') ? 2 : 1;  // $...$ is 1 char
+    const inner = m.slice(d, -d);
+    return display ? `\\[${esc(inner)}\\]` : `\\(${esc(inner)}\\)`;
   });
 }
 

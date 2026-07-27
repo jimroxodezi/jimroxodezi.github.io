@@ -97,6 +97,8 @@
       .split(/(```[\s\S]*?```|`[^`\n]*`)/)
       .map((seg, i) => i % 2 === 1 ? seg : seg
         .replace(/\$\$[\s\S]+?\$\$/g, stash)
+        .replace(/\\\[[\s\S]+?\\\]/g, stash)
+        .replace(/\\\([\s\S]+?\\\)/g, stash)
         .replace(/(?<!\\)\$(?!\s)([^$\n]+?)(?<!\s)\$/g, stash))
       .join('');
     return { processed, math };
@@ -105,9 +107,10 @@
     // \(...\)/\[...\] delimiters so auto-render only touches identified spans.
     return html.replace(/@@MATH(\d+)@@/g, (_, i) => {
       const m = math[+i];
-      return m.startsWith('$$')
-        ? '\\[' + escHtml(m.slice(2, -2)) + '\\]'
-        : '\\(' + escHtml(m.slice(1, -1)) + '\\)';
+      const display = m.startsWith('$$') || m.startsWith('\\[');
+      const d = m.startsWith('$$') || m.startsWith('\\') ? 2 : 1;  // $...$ is 1 char
+      const inner = escHtml(m.slice(d, -d));
+      return display ? '\\[' + inner + '\\]' : '\\(' + inner + '\\)';
     });
   }
   function renderMath(el){
