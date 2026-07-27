@@ -62,6 +62,34 @@ function readingTime(text) {
   return Math.max(1, Math.round(words / 200));
 }
 
+/* Math shielding: marked would eat underscores/asterisks inside $...$ and
+   $$...$$ spans, so we swap them for placeholders before parsing and restore
+   the raw (HTML-escaped) text after — KaTeX auto-render picks it up in the
+   browser. Code blocks and inline code are left untouched. */
+function protectMath(content) {
+  const math = [];
+  const stash = m => `@@MATH${math.push(m) - 1}@@`;
+  const processed = content
+    .split(/(```[\s\S]*?```|`[^`\n]*`)/)          // odd indices = code, skip
+    .map((seg, i) => i % 2 === 1 ? seg : seg
+      .replace(/\$\$[\s\S]+?\$\$/g, stash)
+      // inline $...$: no leading/trailing space inside, not an escaped \$
+      .replace(/(?<!\\)\$(?!\s)([^$\n]+?)(?<!\s)\$/g, stash))
+    .join('');
+  return { processed, math };
+}
+/* Restore with \(...\)/\[...\] delimiters (not $) so the client-side
+   auto-render only touches spans we identified here — a bare "$5 and $10"
+   in prose can never be misparsed as math by the browser pass. */
+function restoreMath(html, math) {
+  return html.replace(/@@MATH(\d+)@@/g, (_, i) => {
+    const m = math[+i];
+    return m.startsWith('$$')
+      ? `\\[${esc(m.slice(2, -2))}\\]`
+      : `\\(${esc(m.slice(1, -1))}\\)`;
+  });
+}
+
 // Fallback excerpt: first real paragraph, markdown stripped, ~160 chars.
 function autoExcerpt(content) {
   const block = content.split(/\n\s*\n/).map(b => b.trim())
@@ -78,7 +106,7 @@ function autoExcerpt(content) {
 
 /* ---------- post page template ---------- */
 
-function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml, newer, older }) {
+function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml, newer, older, hasMath }) {
   const url = `${SITE}/posts/${slug}.html`;
   const meta = dateHuman ? `${dateHuman} · ${minutes} min read` : `${minutes} min read`;
   const navLink = (p, dir, arrowLabel) => p
@@ -121,7 +149,10 @@ ${dateISO ? `<meta property="article:published_time" content="${dateISO}">\n` : 
 <link rel="stylesheet" href="../style.css">
 <script src="../theme.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-</head>
+${hasMath ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
+` : ''}</head>
 <body>
 
 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light mode">light</button>
@@ -152,6 +183,18 @@ ${postNav}
 <script>
   document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
 </script>
+${hasMath ? `<script>
+  window.addEventListener('load', () => {
+    renderMathInElement(document.querySelector('.post-body'), {
+      delimiters: [
+        {left: '\\\\(', right: '\\\\)', display: false},
+        {left: '\\\\[', right: '\\\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+` : ''}
 
 </body>
 </html>
@@ -183,6 +226,7 @@ posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 /* ---------- build pages ---------- */
 
 for (const [i, p] of posts.entries()) {
+  const { processed, math } = protectMath(p.content);
   const html = postPage({
     slug: p.slug,
     title: p.title,
@@ -190,9 +234,10 @@ for (const [i, p] of posts.entries()) {
     dateISO: p.date,
     dateHuman: formatDate(p.date, 'long'),
     minutes: readingTime(p.content),
-    bodyHtml: marked.parse(p.content),
+    bodyHtml: restoreMath(marked.parse(processed), math),
     newer: posts[i - 1] || null,   // posts are sorted newest-first
     older: posts[i + 1] || null,
+    hasMath: math.length > 0,
   });
   fs.writeFileSync(path.join(POSTS_DIR, `${p.slug}.html`), html);
   console.log(`built: posts/${p.slug}.html`);

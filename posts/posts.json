@@ -34,5 +34,11 @@
     "title": "On Reading And Writing",
     "date": "2022-12-27",
     "excerpt": "Reading and writing are the same skill, really"
+  },
+  {
+    "slug": "math-test",
+    "title": "Math test",
+    "date": "2020-01-01",
+    "excerpt": "Scratch post for testing KaTeX math rendering."
   }
 ]

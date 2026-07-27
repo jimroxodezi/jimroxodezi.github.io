@@ -215,6 +215,10 @@
 }
 .loading{font-family:var(--mono); font-size:13px; color:var(--text-muted);}
 
+/* ---------- MATH (KaTeX) ---------- */
+.post-body .katex-display{overflow-x:auto; overflow-y:hidden; padding:4px 0;}
+.post-body .katex{font-size:1.06em;}
+
 /* ---------- PREV/NEXT POST NAV ---------- */
 .post-nav{
   display:flex; justify-content:space-between; gap:20px;

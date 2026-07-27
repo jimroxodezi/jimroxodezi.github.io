@@ -29,6 +29,9 @@
 <script src="theme.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -81,6 +84,44 @@
     return date.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
   }
 
+  // Shield $...$ / $$...$$ spans from marked (it eats underscores/asterisks),
+  // then restore them HTML-escaped for KaTeX auto-render. Mirrors tools/build.js.
+  function escHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function protectMath(content){
+    const math = [];
+    const stash = m => `@@MATH${math.push(m) - 1}@@`;
+    const processed = content
+      .split(/(```[\s\S]*?```|`[^`\n]*`)/)
+      .map((seg, i) => i % 2 === 1 ? seg : seg
+        .replace(/\$\$[\s\S]+?\$\$/g, stash)
+        .replace(/(?<!\\)\$(?!\s)([^$\n]+?)(?<!\s)\$/g, stash))
+      .join('');
+    return { processed, math };
+  }
+  function restoreMath(html, math){
+    // \(...\)/\[...\] delimiters so auto-render only touches identified spans.
+    return html.replace(/@@MATH(\d+)@@/g, (_, i) => {
+      const m = math[+i];
+      return m.startsWith('$$')
+        ? '\\[' + escHtml(m.slice(2, -2)) + '\\]'
+        : '\\(' + escHtml(m.slice(1, -1)) + '\\)';
+    });
+  }
+  function renderMath(el){
+    const go = () => renderMathInElement(el, {
+      delimiters: [
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+    if(typeof renderMathInElement !== 'undefined') go();
+    else window.addEventListener('load', go);
+  }
+
   async function loadPost(){
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
@@ -114,8 +155,10 @@
       document.getElementById('page-title').textContent = `${data.title || slug} — Jimrox`;
       metaEl.textContent = formatDate(data.date);
 
-      bodyEl.innerHTML = marked.parse(content);
+      const { processed, math } = protectMath(content);
+      bodyEl.innerHTML = restoreMath(marked.parse(processed), math);
       bodyEl.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+      if(math.length) renderMath(bodyEl);
     }catch(err){
       titleEl.textContent = 'Post not found';
       bodyEl.innerHTML = '<p>That post doesn\'t exist yet.</p>';

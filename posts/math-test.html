@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math test — Jimrox</title>
+<meta name="description" content="Scratch post for testing KaTeX math rendering.">
+<link rel="canonical" href="https://jimroxodezi.github.io/posts/math-test.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jimroxodezi.github.io/posts/math-test.html">
+<meta property="og:site_name" content="Jimrox">
+<meta property="og:title" content="Math test">
+<meta property="og:description" content="Scratch post for testing KaTeX math rendering.">
+<meta property="og:image" content="https://jimroxodezi.github.io/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over an oscilloscope trace with an anomaly spike">
+<meta property="article:published_time" content="2020-01-01">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Math test">
+<meta name="twitter:description" content="Scratch post for testing KaTeX math rendering.">
+<meta name="twitter:image" content="https://jimroxodezi.github.io/images/og.png">
+<meta name="twitter:creator" content="@basedattribute">
+<link rel="icon" href="../images/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../images/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="../images/favicon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script src="../theme.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light mode">light</button>
+
+<nav class="sitemap">
+  <div class="wrap">
+    <a href="../index.html">Jimrox</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#projects">Projects</a>
+    <a href="../blog.html">Writing</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <a class="back-link" href="../blog.html">&larr; All posts</a>
+    <h1>Math test</h1>
+    <p class="post-meta">January 1, 2020 · 1 min read</p>
+  </div>
+  <div class="post-body">
+<p>Inline with underscores: \(x_i + y_j = z_{max}\) and asterisks: \(a*b*c\).</p>
+<p>Inline with common notation: quorum is \(\lceil (n+1)/2 \rceil\), latency is \(O(\log n)\), and \(\sum_{i=1}^{n} x_i\).</p>
+<p>Display block:</p>
+<p>\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\]</p>
+<p>Display with alignment-heavy content:</p>
+<p>\[
+\mathcal{L}(\theta) = \mathbb{E}_{x \sim p(x)} \left[ \| x - g_\theta(f_\theta(x)) \|^2 \right]
+\]</p>
+<p>Bracket delimiters also work: (a^2 + b^2 = c^2) inline, and</p>
+<p>[
+\int_{-\infty}^{\infty} e^{-x^2} , dx = \sqrt{\pi}
+]</p>
+<p>Money that must NOT become math: it costs $5 and $10 total.</p>
+<p>Code must stay untouched: <code>echo $HOME</code> and:</p>
+<pre><code class="language-bash">export PATH=$PATH:$HOME/bin
+</code></pre>
+
+  </div>
+
+<nav class="post-nav">
+  <a class="newer" href="reading-and-writing.html"><span class="dir">&larr; newer</span><span class="t">On Reading And Writing</span></a>
+  <span></span>
+</nav>
+</div>
+
+<footer></footer>
+
+<script>
+  document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+</script>
+<script>
+  window.addEventListener('load', () => {
+    renderMathInElement(document.querySelector('.post-body'), {
+      delimiters: [
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+
+
+</body>
+</html>
