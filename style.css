@@ -183,6 +183,19 @@
   padding:18px; overflow-x:auto; margin:0 0 20px;
 }
 .post-body pre code{background:none; padding:0; color:var(--text);}
+.code-block{position:relative; margin:0 0 20px;}
+.code-block pre{margin:0;}
+.code-copy{
+  position:absolute; top:8px; right:8px;
+  font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+  background:var(--bg-panel-2); color:var(--text-muted);
+  border:1px solid var(--line); border-radius:4px;
+  padding:4px 9px; cursor:pointer;
+  opacity:0; transition:opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.code-block:hover .code-copy, .code-copy:focus-visible{opacity:1;}
+.code-copy:hover{color:var(--amber); border-color:var(--amber);}
+@media (hover:none){.code-copy{opacity:1;}}
 .post-body li {
     text-align: justify;
     hyphens: auto;

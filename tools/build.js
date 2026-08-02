@@ -109,7 +109,7 @@ function autoExcerpt(content) {
 
 /* ---------- post page template ---------- */
 
-function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml, newer, older, hasMath }) {
+function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyHtml, newer, older, hasMath, hasCode }) {
   const url = `${SITE}/posts/${slug}.html`;
   const meta = dateHuman ? `${dateHuman} · ${minutes} min read` : `${minutes} min read`;
   const navLink = (p, dir, arrowLabel) => p
@@ -136,7 +136,7 @@ function postPage({ slug, title, description, dateISO, dateHuman, minutes, bodyH
 <meta property="og:image" content="${SITE}/images/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over an oscilloscope trace with an anomaly spike">
+<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over a cluster mesh of nodes passing messages, one node down">
 ${dateISO ? `<meta property="article:published_time" content="${dateISO}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
@@ -150,8 +150,8 @@ ${dateISO ? `<meta property="article:published_time" content="${dateISO}">\n` : 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-${hasMath ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+` : ''}${hasMath ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
 ` : ''}</head>
@@ -180,10 +180,25 @@ ${postNav}
 
 <footer></footer>
 
-<script>
+${hasCode ? `<script>
   document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+  document.querySelectorAll('.post-body pre').forEach(pre => {
+    const wrap = document.createElement('div');
+    wrap.className = 'code-block';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+    const btn = document.createElement('button');
+    btn.className = 'code-copy'; btn.type = 'button'; btn.textContent = 'copy';
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(pre.querySelector('code').innerText)
+        .then(() => { btn.textContent = 'copied'; })
+        .catch(() => { btn.textContent = 'failed'; });
+      setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+    });
+    wrap.appendChild(btn);
+  });
 </script>
-${hasMath ? `<script>
+` : ''}${hasMath ? `<script>
   window.addEventListener('load', () => {
     renderMathInElement(document.querySelector('.post-body'), {
       delimiters: [
@@ -227,6 +242,7 @@ posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 for (const [i, p] of posts.entries()) {
   const { processed, math } = protectMath(p.content);
+  const bodyHtml = restoreMath(marked.parse(processed), math);
   const html = postPage({
     slug: p.slug,
     title: p.title,
@@ -234,10 +250,11 @@ for (const [i, p] of posts.entries()) {
     dateISO: p.date,
     dateHuman: formatDate(p.date, 'long'),
     minutes: readingTime(p.content),
-    bodyHtml: restoreMath(marked.parse(processed), math),
+    bodyHtml,
     newer: posts[i - 1] || null,   // posts are sorted newest-first
     older: posts[i + 1] || null,
     hasMath: math.length > 0,
+    hasCode: bodyHtml.includes('<pre><code'),
   });
   fs.writeFileSync(path.join(POSTS_DIR, `${p.slug}.html`), html);
   console.log(`built: posts/${p.slug}.html`);

@@ -12,7 +12,7 @@
 <meta property="og:image" content="https://jimroxodezi.github.io/images/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over an oscilloscope trace with an anomaly spike">
+<meta property="og:image:alt" content="Jimrox — distributed systems, infrastructure, and developer tools, over a cluster mesh of nodes passing messages, one node down">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Writing — Jimrox">
 <meta name="twitter:description" content="Notes on distributed systems, infrastructure, and whatever else is on the bench.">
@@ -158,6 +158,21 @@
       const { processed, math } = protectMath(content);
       bodyEl.innerHTML = restoreMath(marked.parse(processed), math);
       bodyEl.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+      bodyEl.querySelectorAll('pre').forEach(pre => {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-block';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+        const btn = document.createElement('button');
+        btn.className = 'code-copy'; btn.type = 'button'; btn.textContent = 'copy';
+        btn.addEventListener('click', () => {
+          navigator.clipboard.writeText(pre.querySelector('code').innerText)
+            .then(() => { btn.textContent = 'copied'; })
+            .catch(() => { btn.textContent = 'failed'; });
+          setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      });
       if(math.length) renderMath(bodyEl);
     }catch(err){
       titleEl.textContent = 'Post not found';
