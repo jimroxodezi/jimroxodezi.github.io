@@ -1,17 +1,4 @@
   :root{
-    --bg-deep:#1e1610;
-    --bg-panel:#281e15;
-    --bg-panel-2:#31251a;
-    --line:#443528;
-    --amber:#e69a42;
-    --cyan:#d0805a;
-    --text:#ede4d3;
-    --text-muted:#a29682;
-    --mono:'IBM Plex Mono', monospace;
-    --sans:'IBM Plex Sans', sans-serif;
-    --display:'Space Grotesk', sans-serif;
-  }
-  :root[data-theme="light"]{
     --bg-deep:#f4f0e6;
     --bg-panel:#ece6d9;
     --bg-panel-2:#e5ddcd;
@@ -20,6 +7,9 @@
     --cyan:#a5502e;
     --text:#2e2618;
     --text-muted:#6e6552;
+    --mono:'IBM Plex Mono', monospace;
+    --sans:'IBM Plex Sans', sans-serif;
+    --display:'Space Grotesk', sans-serif;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -30,18 +20,8 @@
     font-family:var(--sans);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
-    transition:background 0.3s ease, color 0.3s ease;
   }
 
-  .theme-toggle{
-    position:fixed; top:20px; right:24px; z-index:50;
-    font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
-    background:var(--bg-panel); color:var(--text-muted);
-    border:1px solid var(--line); border-radius:5px;
-    padding:7px 14px; cursor:pointer;
-    transition:border-color 0.2s ease, color 0.2s ease, background 0.3s ease;
-  }
-  .theme-toggle:hover{border-color:var(--amber); color:var(--amber);}
   ::selection{background:var(--amber); color:var(--bg-deep);}
   a{color:var(--cyan); text-decoration:none;}
   a:hover{color:var(--amber);}
@@ -235,8 +215,7 @@
 .post-nav a:hover .t, .post-nav a:hover .dir{color:var(--amber);}
 
 /* ---------- SYNTAX HIGHLIGHTING (highlight.js) ----------
-   Token colors ride on the site variables, so they follow the
-   light/dark toggle automatically. */
+   Token colors ride on the site variables. */
 .hljs{color:var(--text); background:transparent;}
 .hljs-comment, .hljs-quote{color:var(--text-muted); font-style:italic;}
 .hljs-keyword, .hljs-selector-tag, .hljs-tag, .hljs-name,
