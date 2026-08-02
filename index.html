@@ -34,7 +34,7 @@
 <header class="hero">
   <canvas id="trace" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
-    <p class="eyebrow">signal acquired</p>
+    <p class="eyebrow">consensus reached</p>
     <h1>Jimrox</h1>
     <p class="tagline">Building distributed systems, infrastructure, and the developer tools that sit underneath both.</p>
     <!--<p class="location">Benin City, Edo State, Nigeria</p>-->
@@ -196,54 +196,101 @@
   }, {threshold:0.12});
   revealEls.forEach(el=>io.observe(el));
 
-  // Signal trace canvas — ambient oscilloscope line with occasional flagged anomalies
+  // Cluster mesh canvas — nodes gossiping messages, with the occasional
+  // node failure and recovery
   const canvas = document.getElementById('trace');
   const ctx = canvas.getContext('2d');
-  let w, h, dpr;
+  let w, h, dpr, nodes = [], edges = [], packets = [];
+
+  function buildMesh(){
+    nodes = []; edges = []; packets = [];
+    const count = Math.max(9, Math.round(w/130));
+    for(let i=0;i<count;i++){
+      nodes.push({
+        x: ((i+0.5)/count + (Math.random()-0.5)*0.6/count)*w,
+        y: h*(0.16 + Math.random()*0.68),
+        r: 2.2 + Math.random()*1.6,
+        down: 0
+      });
+    }
+    // connect each node to its two nearest neighbours
+    nodes.forEach((n,i)=>{
+      nodes.map((m,j)=>({j, d:(n.x-m.x)**2 + (n.y-m.y)**2}))
+        .filter(o=>o.j!==i).sort((a,b)=>a.d-b.d).slice(0,2)
+        .forEach(o=>{
+          const key = Math.min(i,o.j)+'-'+Math.max(i,o.j);
+          if(!edges.some(e=>e.key===key)) edges.push({key, a:i, b:o.j});
+        });
+    });
+  }
+
   function resize(){
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     w = canvas.clientWidth; h = canvas.clientHeight = canvas.parentElement.offsetHeight;
     canvas.width = w * dpr; canvas.height = h * dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
+    buildMesh();
   }
   window.addEventListener('resize', resize);
   resize();
 
   let t = 0;
-  let nextAnomaly = 140 + Math.random()*160;
-  let anomalyTimer = 0;
-  const points = 220;
-
   function frame(){
     ctx.clearRect(0,0,w,h);
-    t += 1;
-    anomalyTimer++;
+    t++;
 
-    const baseY = h*0.62;
-    const amp = h*0.09;
+    // every so often a node fails, then comes back
+    if(t % 340 === 0){
+      const up = nodes.filter(n=>!n.down);
+      if(up.length > nodes.length - 2) up[Math.floor(Math.random()*up.length)].down = 150;
+    }
 
-    ctx.beginPath();
-    for(let i=0;i<=points;i++){
-      const x = (i/points)*w;
-      const phase = (i*0.09) + t*0.045;
-      let y = baseY + Math.sin(phase)*amp*0.5 + Math.sin(phase*2.3)*amp*0.18;
+    edges.forEach(e=>{
+      const a = nodes[e.a], b = nodes[e.b];
+      const dead = a.down || b.down;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = dead ? 'rgba(165,80,46,0.10)' : 'rgba(165,80,46,0.30)';
+      ctx.lineWidth = 1;
+      if(dead) ctx.setLineDash([3,5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
 
-      // inject an anomaly spike near a moving window
-      const anomalyX = (nextAnomaly % points);
-      const dist = Math.abs(i - anomalyX);
-      if(anomalyTimer > nextAnomaly - 40 && anomalyTimer < nextAnomaly + 40 && dist < 6){
-        y -= amp*2.2*(1-dist/6);
+    // gossip: spawn a message on a random healthy edge
+    if(t % 34 === 0){
+      const live = edges.filter(e=>!nodes[e.a].down && !nodes[e.b].down);
+      if(live.length){
+        const e = live[Math.floor(Math.random()*live.length)];
+        packets.push({e, p: 0, flip: Math.random() < 0.5});
       }
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     }
-    ctx.strokeStyle = 'rgba(165,80,46,0.5)';
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
+    packets = packets.filter(pk=>{
+      pk.p += 0.018;
+      if(pk.p >= 1) return false;
+      const a = nodes[pk.flip ? pk.e.b : pk.e.a], b = nodes[pk.flip ? pk.e.a : pk.e.b];
+      if(a.down || b.down) return false;
+      const x = a.x + (b.x-a.x)*pk.p, y = a.y + (b.y-a.y)*pk.p;
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(168,111,26,0.9)';
+      ctx.fill();
+      return true;
+    });
 
-    if(anomalyTimer > nextAnomaly + 40){
-      anomalyTimer = 0;
-      nextAnomaly = 140 + Math.random()*160;
-    }
+    nodes.forEach(n=>{
+      if(n.down) n.down--;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      if(n.down){
+        ctx.strokeStyle = 'rgba(165,80,46,0.5)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }else{
+        ctx.fillStyle = 'rgba(165,80,46,0.55)';
+        ctx.fill();
+      }
+    });
 
     requestAnimationFrame(frame);
   }
